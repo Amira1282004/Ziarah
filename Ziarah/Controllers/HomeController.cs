@@ -1,12 +1,14 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Ziarah.Models;
+using System.Diagnostics;
+using Ziarah.Data;
+
 
 namespace Ziarah.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private ApplicationDbContext _context = new();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -28,5 +30,10 @@ namespace Ziarah.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+    }
+
+    internal class ErrorViewModel
+    {
+        public string RequestId { get; set; }
     }
 }

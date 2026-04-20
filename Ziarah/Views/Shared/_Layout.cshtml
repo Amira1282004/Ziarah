@@ -5,31 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Ziarah</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Ziarah.styles.css" asp-append-version="true" />
+    <img src="~/assets/images/logo.png" alt="Logo">
+    <link rel="stylesheet" href="~/css/Customer/style.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Customer/header.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Customer/footer.css" asp-append-version="true" />
+    <script src="~/js/header.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ziarah</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+        <nav class="nav">
+            <div class="lang-theme">
+
+                <div class="nav-theme" onclick="toggleTheme()">
+                    <i class="fa-solid fa-moon" id="navThemeIcon"></i>
+                    <span>تغيير الوضع</span>
+                </div>
+
+                <div class="nav-lang">
+                    <i class="fa-solid fa-earth-americas"></i>
+                    <select onchange="changeLang(this.value)">
+                        <option value="ar">العربية</option>
+                        <option value="en">English</option>
+                    </select>
                 </div>
             </div>
+            <a href="index.html" class="nav-active">الرئيسية</a>
+            <div class="list-services">
+                <a href="requestVisit.html">الخدمات   <i class="fa-solid fas fa-angle-down"></i></a>
+                <ul class="items-services">
+                    <li>طلب طبيب</li>
+                    <li>طلب تمريض</li>
+                    <li>أخذ عينة</li>
+                    <li>علاج طبيعي</li>
+                </ul>
+            </div>
+            <a href="requestVisit.html">طلب زيارة منزلية</a>
+            <a href="insurance.html">تأمين اعضاء هيئة التدريس</a>
+            <a href="medicalTips.html">نصائح طبية</a>
+            <a href="about.html">من نحن</a>
+            <a href="contact.html">تواصل معنا</a>
+
         </nav>
+
+        <div class="buttons">
+            <a href="register.html">
+                <button class="join-btn">إنشاء حساب</button>
+            </a>
+
+            <a href="login.html">
+                <button class="login-btn">تسجيل الدخول</button>
+            </a>
+        </div>
+
+
+        </div>
     </header>
     <div class="container">
         <main role="main" class="pb-3">

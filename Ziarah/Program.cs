@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Ziarah
 {
     public class Program
@@ -31,6 +33,7 @@ namespace Ziarah
                 .WithStaticAssets();
 
             app.Run();
+            
         }
     }
 }

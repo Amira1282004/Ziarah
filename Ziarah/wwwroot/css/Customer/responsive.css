@@ -1,0 +1,357 @@
+
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+@media (max-width: 1024px) {
+
+    .main-background .text-center {
+        width: 60%;
+    }
+
+    .main-background p {
+        width: 100%;
+        font-size: 17px;
+    }
+
+    .btns-main {
+        width: 100%;
+    }
+    .we {
+        margin: 50px;
+        margin-top: 200px;
+        gap: 20px;
+    }
+
+    .visit-container {
+        flex-direction: column;
+        width: 90%;
+    }
+
+    .visit-steps {
+        width: 100%;
+    }
+
+    .provide-text {
+        width: 45%;
+    }
+
+    .img-provide {
+        width: 50%;
+    }
+
+    .contact-title {
+        width: 100%;
+    }
+
+    .contact-container {
+        width: 100%;
+    }
+
+    .login-box {
+        width: 60%;
+        margin: 60px auto;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .main-background {
+        height: auto;
+        padding: 20px 0 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .circle-bg {
+        width: 60vw;
+        height: 60vw;
+        left: -10%;
+        opacity: 0.3;
+    }
+
+    .main-background .text-center {
+        right: 0;
+        width: 100%;
+        position: relative;
+        top: auto;
+        padding: 30px 20px 0;
+        box-sizing: border-box;
+    }
+
+    .main-background span {
+        font-size: 20px;
+        display: block;
+    }
+
+    .main-background p {
+        width: 100%;
+        font-size: 15px;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .btns-main {
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 10px;
+        margin-top: 15px;
+        box-sizing: border-box;
+        padding: 0;
+    }
+
+    .book-now,
+    .insurance {
+        min-width: 0;
+        flex: 1;
+        font-size: 13px;
+        padding: 8px 10px;
+        white-space: nowrap;
+    }
+
+    .emerg {
+        width: 80%;
+        max-width: 280px;
+        margin: 15px auto;
+        box-sizing: border-box;
+        flex: 100%;
+    }
+
+    .we {
+        flex-direction: row-reverse;
+        margin: 30px 20px;
+        margin-top: 40px;
+        gap: 20px;
+    }
+    .we-text {
+        width: 70%;
+    }
+
+    .img-we {
+        width: 30%;
+    }
+
+    .we-text {
+        width: 100%;
+    }
+
+    .home-visit {
+        padding: 50px 0;
+    }
+
+    .visit-container {
+        flex-direction: column;
+        width: 90%;
+        gap: 30px;
+    }
+
+    .visit-steps {
+        width: 100%;
+    }
+
+    .visit-steps::before {
+        display: none;
+    }
+
+    .visit-video video {
+        max-width: 100%;
+    }
+
+    .services {
+        padding: 50px 0;
+    }
+
+    .services-container {
+        width: 90%;
+    }
+
+    .section-title {
+        font-size: 22px;
+        margin-bottom: 35px;
+    }
+
+    .provide {
+        padding: 50px 0 0;
+    }
+
+    .provide-container {
+        flex-direction: column;
+        width: 90%;
+        gap: 20px;
+    }
+
+    .provide-text {
+        width: 100%;
+    }
+
+    .provide-text h2 {
+        font-size: 22px;
+    }
+
+    .provide-text p {
+        font-size: 16px;
+    }
+
+    .img-provide {
+        width: 100%;
+    }
+
+    .contact-section {
+        padding: 50px 0 0;
+    }
+
+    .contact-wrapper {
+        flex-direction: column;
+        width: 90%;
+        gap: 20px;
+    }
+
+    .contact-title {
+        width: 100%;
+    }
+
+    .contact-container {
+        width: 100%;
+        padding: 25px;
+        box-sizing: border-box;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+
+    .login-box {
+        width: 88%;
+        margin: 40px auto;
+        padding: 25px 20px;
+        box-sizing: border-box;
+    }
+
+    .login-title {
+        font-size: 20px;
+    }
+
+    .emergency-modal {
+        width: 80%;
+        padding: 25px 20px;
+    }
+
+}
+
+@media (max-width: 480px) {
+    main {
+        height: 85vh;
+    }
+    .img-wrapper {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    .main-img {
+        position: relative;
+        top: 0;
+        right: 0;
+        width: 80%;
+        max-width: 350px;
+    }
+    .circle-bg {
+        width: 100vw;
+        height: 100vw;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 0;
+        opacity: 0.9;
+    }
+    .main-background .text-center {
+        width: 100%;
+        position: relative;
+        top: 0;
+        right: 0;
+        text-align: center;
+        padding: 20px;
+    }
+    .btns-main {
+        flex-direction: row;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .book-now,
+    .insurance   {
+        width: 100%;
+        font-size: 14px;
+        padding: 15px;
+    }
+    .emerg {
+        width: 90%;
+        margin: 20px auto;
+    }
+    .main-background span {
+        font-size: 22px;
+    }
+
+    .main-background p {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .middle-header {
+        padding: 8px 10px;
+    }
+
+    .logo img {
+        width: 45px;
+    }
+
+    .nav a {
+        font-size: 13px;
+    }
+    .services::before , .services::after{
+        width: 300px;
+        height: 300px;
+        border: 70px solid rgba(255,255,255,0.07);
+    }
+
+    .card-sc {
+        padding: 50px 15px 20px;
+    }
+
+    .step-text h3 {
+        font-size: 15px;
+    }
+
+    .step-text p {
+        font-size: 14px;
+    }
+
+    .login-box {
+        width: 94%;
+        margin: 25px auto;
+    }
+
+    .contact-container {
+        padding: 20px 15px;
+    }
+    .form-group {
+        width: 95%;
+    }
+}
+
+
+
+
