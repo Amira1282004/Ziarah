@@ -1,0 +1,123 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    ViewData["Title"] = "تواصل معنا";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Customer/contact.css" />
+}
+@section Scripts {
+    <script src="~/js/Customer/contact.js"></script>
+}
+
+<main class="contact-main">
+
+    <div class="contact-form-col">
+        <div class="section-header">
+            <div>
+                <h2>أرسل رسالتك</h2>
+                <div class="section-line"></div>
+                <p class="section-sub">سنرد عليك خلال ٢٤ ساعة</p>
+            </div>
+        </div>
+
+        <form class="contact-form" id="contactForm" onsubmit="sendMessage(event)">
+
+            <div class="form-row-double">
+                <div class="input-group">
+                    <label>الاسم الأول</label>
+                    <input type="text" id="firstName" placeholder="" required>
+                </div>
+                <div class="input-group">
+                    <label>الاسم الأخير</label>
+                    <input type="text" id="lastName" placeholder="" required>
+                </div>
+            </div>
+
+            <div class="form-row-double">
+                <div class="input-group">
+                    <label>رقم الهاتف</label>
+                    <input type="tel" id="phone" placeholder="01xxxxxxxxx" required>
+                </div>
+                <div class="input-group">
+                    <label> البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="info@gmail.com" required>
+                </div>
+            </div>
+
+
+            <div class="input-group">
+                <label>الرسالة</label>
+                <textarea id="message" rows="5" placeholder="اكتب رسالتك هنا..." required></textarea>
+            </div>
+
+            <div class="input-group">
+                <label class="custom-checkbox">
+                    <input type="checkbox" id="acceptTerms" required>
+                    <span class="checkmark"></span>
+                    أوافق على <a href="#">سياسة الخصوصية</a> وأن يتم التواصل معي بخصوص رسالتي
+                </label>
+            </div>
+
+            <button type="submit" class="send-btn" id="sendBtn">
+                <i class="fa-solid fa-paper-plane"></i>
+                إرسال الرسالة
+            </button>
+
+        </form>
+
+        <div class="form-success" id="formSuccess">
+            <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <h3>تم إرسال رسالتك بنجاح!</h3>
+            <p>شكراً لتواصلك معنا. سيقوم فريقنا بالرد عليك خلال ٢٤ ساعة على البريد الإلكتروني أو رقم الهاتف الذي أدخلته.</p>
+            <button class="send-btn" onclick="resetForm()" style="margin-top:10px;">
+                <i class="fa-solid fa-rotate-right"></i> إرسال رسالة أخرى
+            </button>
+        </div>
+
+    </div>
+
+    <aside class="contact-info-col">
+
+        <div class="social-section">
+            <h3>تابعنا على</h3>
+            <div class="social-links">
+                <a href="#" class="social-btn facebook" title="فيسبوك"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="social-btn instagram" title="إنستغرام"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="social-btn twitter" title="x"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" class="social-btn linkedin" title="لينكدإن"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h3>أسئلة شائعة</h3>
+            <div class="faq-list" id="faqList">
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>كيف أطلب زيارة منزلية؟</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>يمكنك طلب زيارة منزلية من خلال الضغط على "طلب زيارة منزلية" في القائمة الرئيسية، ثم اتباع الخطوات البسيطة لاختيار نوع الخدمة وتحديد الموعد.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>كم يستغرق وصول مقدم الخدمة؟</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>يصل مقدم الخدمة في الموعد المحدد الذي تختاره أثناء الحجز. في حالات الطوارئ يمكن تقليص وقت الانتظار بحسب التوفر.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </aside>
+
+</main>

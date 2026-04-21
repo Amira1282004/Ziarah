@@ -1,0 +1,387 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    ViewData["Title"] = "التامين";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Customer/insurance.css" />
+}
+@section Scripts {
+    <script src="~/js/Customer/insurance.js"></script>
+}
+<section class="insurance-hero">
+    <div class="hero-illustration">
+        <div class="hero-icons">
+            <div class="hero-icons-column">
+                <i class="hero-icon-big fa-solid fa-hospital"></i>
+                <i class="hero-icon-big fa-solid fa-vials"></i>
+            </div>
+            <div class="hero-icons-row">
+                <i class="hero-icon-big fa-solid fa-pills"></i>
+                <i class="hero-icon-big fa-solid fa-x-ray"></i>
+            </div>
+        </div>
+    </div>
+    <div class="hero-content">
+        <h1>التأمين الطبي لاعضاء هيئة التدريس</h1>
+        <div class="line"></div>
+        <p>اعرف المستشفيات والصيدليات ومراكز الأشعة والمعامل المشاركة في تأمينك</p>
+        <div class="hero-badge-row">
+            <div class="hero-badge"><i class="fa-solid fa-hospital"></i> مستشفيات</div>
+            <div class="hero-badge"><i class="fa-solid fa-pills"></i> صيدليات</div>
+            <div class="hero-badge"><i class="fa-solid fa-x-ray"></i> مراكز أشعة</div>
+            <div class="hero-badge"><i class="fa-solid fa-vials"></i> معامل تحاليل</div>
+        </div>
+    </div>
+</section>
+
+<main class="insurance-main">
+
+    <div class="filter-section">
+
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-type="all" onclick="filterCards('all', this)">
+                <i class="fa-solid fa-border-all"></i> الكل
+            </button>
+            <button class="filter-tab" data-type="hospital" onclick="filterCards('hospital', this)">
+                <i class="fa-solid fa-hospital"></i> مستشفيات
+            </button>
+            <button class="filter-tab" data-type="pharmacy" onclick="filterCards('pharmacy', this)">
+                <i class="fa-solid fa-pills"></i> صيدليات
+            </button>
+            <button class="filter-tab" data-type="radiology" onclick="filterCards('radiology', this)">
+                <i class="fa-solid fa-x-ray"></i> مراكز أشعة
+            </button>
+            <button class="filter-tab" data-type="lab" onclick="filterCards('lab', this)">
+                <i class="fa-solid fa-vials"></i> معامل تحاليل
+            </button>
+        </div>
+    </div>
+
+    <div class="search-section">
+        <div class="search-input-wrap">
+            <input type="text" id="insSearchInput" placeholder="ابحث بالاسم أو المنطقة..." oninput="searchCards(this.value)">
+        </div>
+        <button class="map-btn" onclick="openMapModal()">
+            <i class="fa-solid fa-map-location-dot"></i>
+            الخريطة
+        </button>
+    </div>
+
+    <div class="results-meta">
+        <div class="results-count">عرض <span id="visibleCount">6</span> من <span id="totalCount">6</span> نتيجة</div>
+    </div>
+
+    <div class="cards-grid" id="cardsGrid">
+        <div class="ins-card" data-type="hospital" data-id="1" data-phone="23638839" data-lat="30.0313" data-lng="31.2289">
+            <div class="card-right">
+                <div class="card-body">
+                    <div class="card-name">القصر العيني التعليمي</div>
+                    <div class="card-address">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>شارع القصر العينى</span>
+                    </div>
+                    <div class="card-depts">
+                        <span class="dept-tag">جراحة عامة</span>
+                        <span class="dept-tag">عظام</span>
+                        <span class="dept-tag">جلدية</span>
+                        <span class="dept-tag">باطنة</span>
+                        <span class="dept-tag">مخ واعصاب</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a class="call-now-btn" href="tel:23638839">
+                        <i class="fa-solid fa-phone"></i>
+                        اتصل الآن
+                    </a>
+                </div>
+            </div>
+            <div class="card-img-wrap">
+                <img src="~/assets/image/القصر العيني التعليمي.jfif" alt="القصر العيني التعليمي">
+]                <span class="emergency-tag"><i class="fa-solid fa-triangle-exclamation"></i> طوارئ</span>
+            </div>
+        </div>
+
+        <div class="ins-card" data-type="hospital" data-id="2" data-phone="24143931" data-lat="30.0761" data-lng="31.3424">
+            <div class="card-right">
+                <div class="card-body">
+                    <div class="card-name">مستشفي كليوباترا</div>
+                    <div class="card-address">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>39 شارع كليوباترا ميدان صلاح الدين مصر الجديدة</span>
+                    </div>
+                    <div class="card-depts">
+                        <span class="dept-tag">جراحة عامة</span>
+                        <span class="dept-tag">عظام</span>
+                        <span class="dept-tag">جلدية</span>
+                        <span class="dept-tag">باطنة</span>
+                        <span class="dept-tag">مخ واعصاب</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a class="call-now-btn" href="tel:24143931">
+                        <i class="fa-solid fa-phone"></i>
+                        اتصل الآن
+                    </a>
+                </div>
+            </div>
+            <div class="card-img-wrap">
+                <img src="~/assets/image/مستشفيات-كليوباترا.jpeg" alt="مستشفي كليوباترا">
+                <span class="emergency-tag"><i class="fa-solid fa-triangle-exclamation"></i> طوارئ</span>
+            </div>
+        </div>
+
+        <div class="ins-card" data-type="hospital" data-id="3" data-phone="26739050" data-lat="30.0682" data-lng="31.3284">
+            <div class="card-right">
+                <div class="card-body">
+                    <div class="card-name">مستشفي دار الحكمة</div>
+                    <div class="card-address">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>10 ش محمد حسين هيكل عباس العقاد مدينة نصر</span>
+                    </div>
+                    <div class="card-depts">
+                        <span class="dept-tag">جراحة عامة</span>
+                        <span class="dept-tag">عظام</span>
+                        <span class="dept-tag">جلدية</span>
+                        <span class="dept-tag">باطنة</span>
+                        <span class="dept-tag">مخ واعصاب</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a class="call-now-btn" href="tel:26739050">
+                        <i class="fa-solid fa-phone"></i>
+                        اتصل الآن
+                    </a>
+                </div>
+            </div>
+            <div class="card-img-wrap">
+                <img src="~/assets/image/مستشفي راس الحكمة.jpg" alt="مستشفي دار الحكمة">
+                <span class="emergency-tag"><i class="fa-solid fa-triangle-exclamation"></i> طوارئ</span>
+            </div>
+        </div>
+
+        <div class="ins-card" data-type="hospital" data-id="4" data-phone="16259" data-lat="30.0589" data-lng="31.2201">
+            <div class="card-right">
+                <div class="card-body">
+                    <div class="card-name">مستشفي السعودي الالماني</div>
+                    <div class="card-address">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>تقاطع محور طه حسين مع ش جوزيف تيتو</span>
+                    </div>
+                    <div class="card-depts">
+                        <span class="dept-tag">جراحة عامة</span>
+                        <span class="dept-tag">عظام</span>
+                        <span class="dept-tag">جلدية</span>
+                        <span class="dept-tag">باطنة</span>
+                        <span class="dept-tag">مخ واعصاب</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a class="call-now-btn" href="tel:16259">
+                        <i class="fa-solid fa-phone"></i>
+                        اتصل الآن
+                    </a>
+                </div>
+            </div>
+            <div class="card-img-wrap">
+                <img src="~/assets/image/المستشفى-السعودى-الألمانى-بالقاهرة.webp" alt="مستشفي السعودي الالماني">
+                <span class="emergency-tag"><i class="fa-solid fa-triangle-exclamation"></i> طوارئ</span>
+            </div>
+        </div>
+
+        <div class="ins-card" data-type="hospital" data-id="5" data-phone="16370" data-lat="30.0754" data-lng="31.3412">
+            <div class="card-right">
+                <div class="card-body">
+                    <div class="card-name">مستشفي دار الفؤاد</div>
+                    <div class="card-address">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>تقاطع طريق النصر مع شارع يوسف عباس - أرض الغابة الدولية</span>
+                    </div>
+                    <div class="card-depts">
+                        <span class="dept-tag">جراحة عامة</span>
+                        <span class="dept-tag">عظام</span>
+                        <span class="dept-tag">جلدية</span>
+                        <span class="dept-tag">باطنة</span>
+                        <span class="dept-tag">مخ واعصاب</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a class="call-now-btn" href="tel:16370">
+                        <i class="fa-solid fa-phone"></i>
+                        اتصل الآن
+                    </a>
+                </div>
+            </div>
+            <div class="card-img-wrap">
+                <img src="~/assets/image/مستشفي دار الفؤاد.jpg" alt="مستشفي دار الفؤاد">
+                
+                <span class="emergency-tag"><i class="fa-solid fa-triangle-exclamation"></i> طوارئ</span>
+            </div>
+        </div>
+
+        <div class="ins-card" data-type="hospital" data-id="6" data-phone="19885" data-lat="29.9592" data-lng="31.2595">
+            <div class="card-right">
+                <div class="card-body">
+                    <div class="card-name">مستشفي السلام الدولي</div>
+                    <div class="card-address">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>كورنيش النيل المعادى</span>
+                    </div>
+                    <div class="card-depts">
+                        <span class="dept-tag">جراحة عامة</span>
+                        <span class="dept-tag">عظام</span>
+                        <span class="dept-tag">جلدية</span>
+                        <span class="dept-tag">باطنة</span>
+                        <span class="dept-tag">مخ واعصاب</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a class="call-now-btn" href="tel:19885">
+                        <i class="fa-solid fa-phone"></i>
+                        اتصل الآن
+                    </a>
+                </div>
+            </div>
+            <div class="card-img-wrap">
+                <img src="~/assets/image/hosptial.webp" alt="مستشفي السلام الدولي">
+                <span class="emergency-tag"><i class="fa-solid fa-triangle-exclamation"></i> طوارئ</span>
+            </div>
+        </div>
+        <div class="ins-card" data-type="hospital" data-id="6" data-phone="19885" data-lat="29.9592" data-lng="31.2595">
+            <div class="card-right">
+                <div class="card-body">
+                    <div class="card-name">مستشفي السلام الدولي</div>
+                    <div class="card-address">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>كورنيش النيل المعادى</span>
+                    </div>
+                    <div class="card-depts">
+                        <span class="dept-tag">جراحة عامة</span>
+                        <span class="dept-tag">عظام</span>
+                        <span class="dept-tag">جلدية</span>
+                        <span class="dept-tag">باطنة</span>
+                        <span class="dept-tag">مخ واعصاب</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a class="call-now-btn" href="tel:19885">
+                        <i class="fa-solid fa-phone"></i>
+                        اتصل الآن
+                    </a>
+                </div>
+            </div>
+            <div class="card-img-wrap">
+                <img src="~/assets/image/hosptial.webp" alt="مستشفي السلام الدولي">
+                <span class="emergency-tag"><i class="fa-solid fa-triangle-exclamation"></i> طوارئ</span>
+            </div>
+        </div>
+        <div class="ins-card" data-type="hospital" data-id="6" data-phone="19885" data-lat="29.9592" data-lng="31.2595">
+            <div class="card-right">
+                <div class="card-body">
+                    <div class="card-name">مستشفي السلام الدولي</div>
+                    <div class="card-address">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>كورنيش النيل المعادى</span>
+                    </div>
+                    <div class="card-depts">
+                        <span class="dept-tag">جراحة عامة</span>
+                        <span class="dept-tag">عظام</span>
+                        <span class="dept-tag">جلدية</span>
+                        <span class="dept-tag">باطنة</span>
+                        <span class="dept-tag">مخ واعصاب</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a class="call-now-btn" href="tel:19885">
+                        <i class="fa-solid fa-phone"></i>
+                        اتصل الآن
+                    </a>
+                </div>
+            </div>
+            <div class="card-img-wrap">
+                <img src="~/assets/image/hosptial.webp" alt="مستشفي السلام الدولي">
+                <span class="emergency-tag"><i class="fa-solid fa-triangle-exclamation"></i> طوارئ</span>
+            </div>
+        </div>
+        <div class="ins-card" data-type="hospital" data-id="6" data-phone="19885" data-lat="29.9592" data-lng="31.2595">
+            <div class="card-right">
+                <div class="card-body">
+                    <div class="card-name">مستشفي السلام الدولي</div>
+                    <div class="card-address">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>كورنيش النيل المعادى</span>
+                    </div>
+                    <div class="card-depts">
+                        <span class="dept-tag">جراحة عامة</span>
+                        <span class="dept-tag">عظام</span>
+                        <span class="dept-tag">جلدية</span>
+                        <span class="dept-tag">باطنة</span>
+                        <span class="dept-tag">مخ واعصاب</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a class="call-now-btn" href="tel:19885">
+                        <i class="fa-solid fa-phone"></i>
+                        اتصل الآن
+                    </a>
+                </div>
+            </div>
+            <div class="card-img-wrap">
+                <img src="~/assets/image/hosptial.webp" alt="مستشفي السلام الدولي">
+                <span class="emergency-tag"><i class="fa-solid fa-triangle-exclamation"></i> طوارئ</span>
+            </div>
+        </div>
+    </div>
+    <div class="empty-state" id="emptyState">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <h3>لا توجد نتائج</h3>
+        <p>جرب تغيير كلمة البحث أو نوع التصفية</p>
+    </div>
+
+    <div class="pagination-wrap" id="paginationWrap">
+        <button class="page-btn arrow disabled">
+            <i class="fa-solid fas fa-chevron-right"></i>
+        </button>    
+        <button class="page-btn active"><span>1</span></button>
+        <button class="page-btn"><span>2</span></button>    
+        <button class="page-btn"><span>3</span></button>    
+
+        <button class="page-btn">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+    </div>
+
+</main>
+
+<div class="map-overlay" id="mapModal" onclick="closeMapIfOutside(event)">
+    <div class="map-modal">
+        <div class="map-modal-header">
+            <div class="map-modal-title">
+                <i class="fa-solid fa-map-location-dot"></i>
+                مواقع المنشات الطبية المشاركة
+            </div>
+            <button class="map-close-btn" onclick="closeMapModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="map-filter-bar">
+            <button class="map-filter-btn active" onclick="filterMap('all', this)">الكل</button>
+            <button class="map-filter-btn" onclick="filterMap('hospital', this)"><i class="fa-solid fa-hospital"></i> مستشفيات</button>
+            <button class="map-filter-btn" onclick="filterMap('pharmacy', this)"><i class="fa-solid fa-pills"></i> صيدليات</button>
+            <button class="map-filter-btn" onclick="filterMap('radiology', this)"><i class="fa-solid fa-x-ray"></i> أشعة</button>
+            <button class="map-filter-btn" onclick="filterMap('lab', this)"><i class="fa-solid fa-vials"></i> معامل</button>
+        </div>
+
+        <iframe
+            id="mapFrame"
+            class="map-frame"
+            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d110502.76917651614!2d31.235715!3d30.044420!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sar!2seg!4v1715000000000"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+</div>

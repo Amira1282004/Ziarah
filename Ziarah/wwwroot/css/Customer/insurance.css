@@ -23,7 +23,7 @@ a {
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    background: linear-gradient(rgba(18, 141, 207, 0.712), rgba(18, 201, 207, 0.705)), url("../assets/image/vecteezy_busy-hospital-corridor-with-diverse-doctors-in-motion_27185469.jpg");
+    background: linear-gradient(rgba(18, 141, 207, 0.712), rgba(18, 201, 207, 0.705)), url("/assets/image/vecteezy_busy-hospital-corridor-with-diverse-doctors-in-motion_27185469.jpg");
     background-size: cover;
 
 }

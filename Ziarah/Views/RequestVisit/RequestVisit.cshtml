@@ -1,0 +1,483 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    ViewData["Title"] = "طلب زيارة";
+}
+ @section Styles {
+    <link rel="stylesheet" href="~/css/Customer/requestVisit.css" />
+}
+@section Scripts {
+    <script src="~/js/Customer/requestVisit.js"></script>
+}
+<section class="visit-hero">
+    <div class="hero-illustration">
+        <img src="~/assets/image/hero-req-visit.png" alt="طلب زيارة">
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>طلب زيارة منزلية</h1>
+        <div class="line"></div>
+        <p>احصل على الرعاية الصحية في منزلك على يد نخبة من الأطباء والممرضين المتخصصين</p>
+    </div>
+</section>
+
+<main class="visit-main">
+
+    <div class="filter-section">
+        <div class="visit-type-tabs">
+            <button class="visit-type-btn active">
+                <i class="fa-solid fa-user-doctor"></i>
+                <span>طبيب</span>
+            </button>
+            <button class="visit-type-btn">
+                <i class="fa-solid fa-user-nurse"></i>
+                <span>تمريض</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="filter-section" id="filterArea">
+        <div class="filter-grid">
+            <div class="filter-item">
+                <label>الاسم</label>
+                <input type="text" id="filterName" placeholder="ابحث بالاسم...">
+            </div>
+            <div class="filter-item">
+                <label> العنوان</label>
+                <input type="text" id="filterAddress" placeholder="المنطقة أو الحي...">
+            </div>
+            <div class="filter-item" id="specFilter">
+                <label> التخصص</label>
+                <div class="custom-select-wrapper">
+                    <select id="filterSpec" class="custom-select">
+                        <option value="">كل التخصصات</option>
+                        <option>باطنة</option>
+                        <option>مخ وأعصاب</option>
+                        <option>عظام</option>
+                        <option>أطفال وحديثي الولادة</option>
+                        <option>نساء وتوليد</option>
+                        <option>جلدية</option>
+                        <option>عيون</option>
+                        <option>أنف وأذن وحنجرة</option>
+                        <option>أمراض الدم والأورام</option>
+                        <option>طب نفسي</option>
+                        <option>علاج طبيعي وتأهيل</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-item">
+                <label>التقييم</label>
+                <div class="custom-select-wrapper">
+                    <select id="filterRating" class="custom-select">
+                        <option value="">كل التقييمات</option>
+                        <option value="5">5 نجوم فقط</option>
+                        <option value="4">4 نجوم فأكثر</option>
+                        <option value="3">3 نجوم فأكثر</option>
+                        <option value="2">2 نجوم فأكثر</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-item">
+                <label>حدد اعلي السعر</label>
+                <div class="price-range-wrap">
+                    <input type="range" id="filterPrice" min="100" max="1000" step="50" value="1000" oninput="updatePriceLabel(); applyFilters()">
+                    <span id="priceLabel">حتى 1000 جنيه</span>
+                </div>
+            </div>
+            <div class="filter-item filter-reset-wrap">
+                <button class="reset-btn">
+                    <i class="fa-solid fa-rotate-right"></i> 
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-meta">
+        <div class="results-count">
+            عرض <span id="visibleCount">12</span> من <span id="totalCount">48</span> نتيجة
+        </div>
+    </div>
+
+    <div class="cards-grid" id="cardsGrid">
+        <div class="provider-card"
+             data-id="1"
+             data-type="doctor"
+             data-name="د. محمد محمود"
+             data-spec="عظام"
+             data-price="500"
+             data-rating="4.5"
+             data-img="~/assets/image/mohamed.png">
+            <div class="provider-img">
+                <img src="~/assets/image/mohamed.png" alt="د. محمد محمود">
+                <span class="provider-rating-badge">
+                    <i class="fa-solid fa-star"></i> 4.5
+                </span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. محمد محمود</div>
+                <div class="provider-spec">عظام</div>
+                <div class="provider-price">
+                    <i class="fa-solid fa-briefcase-medical"></i>
+                    سعر الكشف: <span>500 جنيه</span>
+                </div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+        <div class="provider-card"
+             data-id="2" data-type="doctor" data-name="د. سارة خالد"
+             data-spec="باطنة" data-price="700" data-rating="4.5"
+             data-img="~/assets/image/sara.png">
+            <div class="provider-img">
+                <img src="~/assets/image/sara.png" alt="د. سارة خالد">
+                <span class="provider-rating-badge"><i class="fa-solid fa-star"></i> 4.5</span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. سارة خالد</div>
+                <div class="provider-spec">باطنة</div>
+                <div class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> سعر الكشف: <span>700 جنيه</span></div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+        <div class="provider-card"
+             data-id="3" data-type="doctor" data-name="د. احمد الصاوي"
+             data-spec="عظام" data-price="400" data-rating="4.1"
+             data-img="~/assets/image/ahmed.jpg">
+            <div class="provider-img">
+                <img src="~/assets/image/ahmed.jpg" alt="د. احمد الصاوي">
+                <span class="provider-rating-badge"><i class="fa-solid fa-star"></i> 4.1</span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. احمد الصاوي</div>
+                <div class="provider-spec">عظام</div>
+                <div class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> سعر الكشف: <span>400 جنيه</span></div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+        <div class="provider-card"
+             data-id="4" data-type="doctor" data-name="د. ابراهيم عبدالجواد"
+             data-spec="أطفال وحديثي الولادة" data-price="550" data-rating="4.8"
+             data-img="~/assets/image/ibrahim.jpeg">
+            <div class="provider-img">
+                <img src="~/assets/image/ibrahim.jpeg" alt="د. ابراهيم عبدالجواد">
+                <span class="provider-rating-badge"><i class="fa-solid fa-star"></i> 4.8</span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. ابراهيم عبدالجواد</div>
+                <div class="provider-spec">أطفال وحديثي الولادة</div>
+                <div class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> سعر الكشف: <span>550 جنيه</span></div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+        <div class="provider-card"
+             data-id="5" data-type="doctor" data-name="د. خالد علام"
+             data-spec="مخ وأعصاب" data-price="500" data-rating="4.4"
+             data-img="~/assets/image/khaled.jpg">
+            <div class="provider-img">
+                <img src="~/assets/image/khaled.jpg" alt="د. خالد علام">
+                <span class="provider-rating-badge"><i class="fa-solid fa-star"></i> 4.4</span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. خالد علام</div>
+                <div class="provider-spec">مخ وأعصاب</div>
+                <div class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> سعر الكشف: <span>500 جنيه</span></div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+        <div class="provider-card"
+             data-id="6" data-type="doctor" data-name="د. محمود فريد"
+             data-spec="جلدية" data-price="500" data-rating="3.9"
+             data-img="~/assets/image/mahmoud.jpg">
+            <div class="provider-img">
+                <img src="~/assets/image/mahmoud.jpg" alt="د. محمود فريد">
+                <span class="provider-rating-badge"><i class="fa-solid fa-star"></i> 3.9</span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. محمود فريد</div>
+                <div class="provider-spec">جلدية</div>
+                <div class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> سعر الكشف: <span>500 جنيه</span></div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+        <div class="provider-card"
+             data-id="7" data-type="doctor" data-name="د. عمر ابراهيم"
+             data-spec="باطنة" data-price="650" data-rating="4.4"
+             data-img="~/assets/image/omar.png">
+            <div class="provider-img">
+                <img src="~/assets/image/omar.png" alt="د. عمر ابراهيم">
+                <span class="provider-rating-badge"><i class="fa-solid fa-star"></i> 4.4</span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. عمر ابراهيم</div>
+                <div class="provider-spec">باطنة</div>
+                <div class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> سعر الكشف: <span>650 جنيه</span></div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+        <div class="provider-card"
+             data-id="8" data-type="doctor" data-name="د. رشا صديق"
+             data-spec="نساء وتوليد" data-price="700" data-rating="4.6"
+             data-img="~/assets/image/rasha.jpg">
+            <div class="provider-img">
+                <img src="~/assets/image/rasha.jpg" alt="د. رشا صديق">
+                <span class="provider-rating-badge"><i class="fa-solid fa-star"></i> 4.6</span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. رشا صديق</div>
+                <div class="provider-spec">نساء وتوليد</div>
+                <div class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> سعر الكشف: <span>700 جنيه</span></div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+        <div class="provider-card"
+             data-id="9" data-type="doctor" data-name="د. سعد رشاد"
+             data-spec="أطفال وحديثي الولادة" data-price="350" data-rating="4.7"
+             data-img="~/assets/image/saad.JPG">
+            <div class="provider-img">
+                <img src="~/assets/image/saad.JPG" alt="د. سعد رشاد">
+                <span class="provider-rating-badge"><i class="fa-solid fa-star"></i> 4.7</span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. سعد رشاد</div>
+                <div class="provider-spec">أطفال وحديثي الولادة</div>
+                <div class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> سعر الكشف: <span>350 جنيه</span></div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+        <div class="provider-card">
+            <div class="provider-img">
+                <img src="~/assets/image/sara.png" alt="">
+                </span>
+                <span class="provider-rating-badge">
+                    <i class="fa-solid fa-star"></i> 4.5
+                </span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. سارة عبدالجواد</div>
+                <div class="provider-spec">
+                    باطنة
+                </div>
+                <div class="provider-price">
+                    <i class="fa-solid fa-briefcase-medical"></i>
+                    سعر الكشف: <span>550 جنيه</span>
+                </div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal()"> طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+
+            </div>
+        </div>
+        <div class="provider-card">
+            <div class="provider-img">
+                <img src="~/assets/image/taha.jpg" alt="">
+                </span>
+                <span class="provider-rating-badge">
+                    <i class="fa-solid fa-star"></i> 4.3
+                </span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. طه علوان</div>
+                <div class="provider-spec">
+                    طب نفسي
+                </div>
+                <div class="provider-price">
+                    <i class="fa-solid fa-briefcase-medical"></i>
+                    سعر الكشف: <span>600 جنيه</span>
+                </div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal()"> طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+
+            </div>
+        </div>
+        <div class="provider-card"
+             data-id="10" data-type="doctor" data-name="د. سارة عبدالجواد"
+             data-spec="باطنة" data-price="550" data-rating="4.5"
+             data-img="~/assets/image/sara.png">
+            <div class="provider-img">
+                <img src="~/assets/image/sara.png" alt="د. سارة عبدالجواد">
+                <span class="provider-rating-badge"><i class="fa-solid fa-star"></i> 4.5</span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. سارة عبدالجواد</div>
+                <div class="provider-spec">باطنة</div>
+                <div class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> سعر الكشف: <span>550 جنيه</span></div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+        <div class="provider-card"
+             data-id="11" data-type="doctor" data-name="د. طه علوان"
+             data-spec="طب نفسي" data-price="600" data-rating="4.3"
+             data-img="~/assets/image/taha.jpg">
+            <div class="provider-img">
+                <img src="~/assets/image/taha.jpg" alt="د. طه علوان">
+                <span class="provider-rating-badge"><i class="fa-solid fa-star"></i> 4.3</span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. طه علوان</div>
+                <div class="provider-spec">طب نفسي</div>
+                <div class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> سعر الكشف: <span>600 جنيه</span></div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+        <div class="provider-card"
+             data-id="12" data-type="doctor" data-name="د. نور عبدالكريم"
+             data-spec="أطفال وحديثي الولادة" data-price="400" data-rating="4.5"
+             data-img="~/assets/image/nour.png">
+            <div class="provider-img">
+                <img src="~/assets/image/nour.png" alt="د. نور عبدالكريم">
+                <span class="provider-rating-badge"><i class="fa-solid fa-star"></i> 4.5</span>
+            </div>
+            <div class="provider-card-body">
+                <div class="provider-name">د. نور عبدالكريم</div>
+                <div class="provider-spec">أطفال وحديثي الولادة</div>
+                <div class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> سعر الكشف: <span>400 جنيه</span></div>
+            </div>
+            <div class="provider-card-footer">
+                <button class="book-btn" onclick="openBookingModal(this)">طلب طبيب</button>
+                <a href="doctorProfile.html" class="more-btn">المزيد</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+        <i class="fa-solid fa-user-doctor"></i>
+        <h3>لا توجد نتائج</h3>
+        <p>جرب تغيير مدخلاتك</p>
+    </div>
+    <div class="pagination-wrap" id="paginationWrap"></div>
+
+</main>
+
+<div class="overlay" id="bookingOverlay" onclick="closeBookingIfOutside(event)">
+    <div class="booking-modal">
+        <div class="booking-modal-header">
+            <div class="booking-modal-title">
+                طلب زيارة
+            </div>
+            <button class="booking-close-btn" onclick="closeBookingModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="booking-provider-info" id="bookingDoctorInfo">
+            <div class="booking-provider-img">
+                <img src="~/assets/image/mohamed.png" alt="">
+            </div>
+            <div>
+                <div class="booking-provider-name">محمد احمد</div>
+                <div class="booking-provider-spec">عظام</div>
+                <div class="booking-provider-price">سعر الكشف 500 جنيه</div>
+            </div>
+        </div>
+
+        <form id="bookingForm" onsubmit="submitBooking(event)">
+            <input type="hidden" name="doctorId" id="bookingDoctorId">
+            <input type="hidden" name="visitType" id="bookingVisitType" value="doctor">
+            <div class="double-input">
+                <div class="input-group">
+                    <label>الاسم بالكامل</label>
+                    <input type="text" name="fullName" placeholder="الاسم رباعي" required>
+                </div>
+                <div class="input-group">
+                    <label>رقم الهاتف للتواصل</label>
+                    <input type="text" name="phone" placeholder="01xxxxxxxxx" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>العنوان بالتفصيل</label>
+                <input type="text" name="address" placeholder="المحافظة - الحي - الشارع - رقم المبنى..." required>
+            </div>
+
+            <div class="double-input">
+                <div class="input-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" name="email" placeholder="info@gmail.com">
+                </div>
+                <div class="input-group">
+                    <label>اختيار الموعد</label>
+                    <input type="datetime-local" name="datetime" required>
+                </div>
+            </div>
+
+            <div class="input-group file-upload">
+                <label for="nationalId" id="nationalIdLabel">
+                     رفع صورة بطاقة الرقم القومي
+                </label>
+                <input type="file" id="nationalId" name="nationalId" accept="image/*" required>
+            </div>
+
+            <div class="input-group">
+                <label>الحالة المرضية</label>
+                <input type="text" name="condition" placeholder="اذكر الأعراض أو الحالة التي تحتاج رعاية..." required>
+            </div>
+
+
+
+            <div class="input-group">
+                <label>ملاحظات إضافية <span style="color:#aaa;font-weight:400">(اختياري)</span></label>
+                <textarea name="notes" placeholder="أي معلومات إضافية تساعد الطبيب..."></textarea>
+            </div>
+
+            <div class="booking-form-footer">
+                <button type="submit" class="submit-btn">
+                    طلب الآن
+                </button>
+                <a href="register.html" class="register-link">
+                     إنشاء حساب | حتي لا تحتاج لإدخال البيانات في المرة القادمة
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="overlay " id="successOverlay">
+    <div class="success-modal">
+        <div class="success-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h2>تم إرسال طلبك بنجاح</h2>
+        <p>سيتواصل معك أحد ممثلينا في أقرب وقت لتأكيد الزيارة </p>
+        <button class="submit-btn" onclick="closeSuccessModal()" style="margin-top:20px; width:auto; padding:10px 40px;">
+            حسناً
+        </button>
+    </div>
+</div>

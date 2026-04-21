@@ -1,0 +1,298 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    ViewData["Title"] = "نصائح طبية";
+}
+ @section Styles {
+    <link rel="stylesheet" href="~/css/Customer/medicalTips.css" />
+}
+@section Scripts {
+    <script src="~/js/Customer/medicalTips.js"></script>
+}
+<section class="tips-hero">
+    <div class="welcome-bg-circles">
+        <span></span><span></span><span></span>
+    </div>
+    <div class="tips-hero-inner">
+        <div class="tips-hero-text">
+            <h1>نصائح طبية مفيدة لك ولاسرتك</h1>
+            <div class="line"></div>
+
+            <p class="tips-hero-sub">نقدم لك نصائح طبية مختارة بعناية من أطباء متخصصين لمساعدتك على الوقاية من الأمراض والحفاظ على حياة صحية أفضل</p>
+        </div>
+    </div>
+</section>
+
+<div class="tips-filter-section">
+    <div class="filter-tabs-wrap">
+        <button class="tips-filter-tab active" data-cat="all" onclick="filterTips('all', this)">
+            <i class="fa-solid fa-border-all"></i> الكل
+        </button>
+        <button class="tips-filter-tab" data-cat="heart" onclick="filterTips('heart', this)">
+            <i class="fa-solid fa-heart-pulse"></i> القلب والأوعية
+        </button>
+        <button class="tips-filter-tab" data-cat="nutrition" onclick="filterTips('nutrition', this)">
+            <i class="fa-solid fa-apple-whole"></i> التغذية
+        </button>
+        <button class="tips-filter-tab" data-cat="mental" onclick="filterTips('mental', this)">
+            <i class="fa-solid fa-brain"></i> الصحة النفسية
+        </button>
+        <button class="tips-filter-tab" data-cat="bones" onclick="filterTips('bones', this)">
+            <i class="fa-solid fa-bone"></i> العظام والمفاصل
+        </button>
+        <button class="tips-filter-tab" data-cat="kids" onclick="filterTips('kids', this)">
+            <i class="fa-solid fa-baby"></i> صحة الأطفال
+        </button>
+        <button class="tips-filter-tab" data-cat="diabetes" onclick="filterTips('diabetes', this)">
+            <i class="fa-solid fa-syringe"></i> السكري والغدد
+        </button>
+        <button class="tips-filter-tab" data-cat="skin" onclick="filterTips('skin', this)">
+            <i class="fa-solid fa-sun"></i> الجلد والشعر
+        </button>
+    </div>
+</div>
+
+<section class="featured-section" id="featuredSection">
+    <div class="section-header">
+        <div>
+            <h2>نصيحة مميزة</h2>
+            <div class="section-line"></div>
+        </div>
+    </div>
+    <div class="featured-card">
+        <div class="featured-img">
+            <img src="~/assets/image/tip-featured.jfif"
+                 onerror="this.parentElement.style.background='linear-gradient(135deg,#128CCF22,#128CCF44)'; this.style.display='none';" alt="">
+            <span class="featured-badge"><i class="fa-solid fa-star"></i> مميز</span>
+        </div>
+        <div class="featured-body">
+            <div class="tip-category-chip">
+                <i class="fa-solid fa-heart-pulse"></i> القلب والأوعية
+            </div>
+            <h2>10 عادات يومية تحمي قلبك من أمراض القلب والأوعية الدموية</h2>
+            <p>أمراض القلب هي السبب الرئيسي للوفاة حول العالم، لكن اتباع عادات يومية بسيطة يمكن أن يُقلل خطر الإصابة بشكل كبير. من ممارسة الرياضة المنتظمة إلى الإقلاع عن التدخين، تعرف على أهم الخطوات التي يوصي بها أطباء القلب للحفاظ على صحة قلبك.</p>
+            <button class="read-more-btn" onclick="openModal(0)">
+                اقرأ المزيد <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<section class="tips-grid-section">
+    <div class="section-header">
+        <div>
+            <h2>جميع النصائح</h2>
+            <div class="section-line"></div>
+            <p class="section-sub" id="tipsCount">عرض ٩ نصائح</p>
+        </div>
+    </div>
+
+    <div class="tips-grid" id="tipsGrid">
+
+        <article class="tip-card" data-cat="nutrition" data-index="1">
+            <div class="tip-img">
+                <img src="~/assets/image/tip1.jfif"
+                     onerror="this.parentElement.classList.add('tip-img-fallback'); this.style.display='none';" alt="">
+                <div class="tip-img-icon nutrition"><i class="fa-solid fa-apple-whole"></i></div>
+            </div>
+            <div class="tip-body">
+                <div class="tip-category-chip"><i class="fa-solid fa-apple-whole"></i> التغذية</div>
+                <h3>فوائد شرب الماء على الريق وكيف يحسّن صحتك</h3>
+                <p>يعد شرب كوب أو كوبين من الماء فور الاستيقاظ من أبسط العادات الصحية وأكثرها فائدة. يساعد على تنشيط الجهاز الهضمي، تحسين التركيز، وطرد السموم من الجسم.</p>
+            </div>
+            <div class="tip-footer">
+                <button class="read-more-btn small" onclick="openModal(1)">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </article>
+
+        <article class="tip-card" data-cat="mental" data-index="2">
+            <div class="tip-img">
+                <img src="~/assets/image/tip2.webp"
+                     onerror="this.parentElement.classList.add('tip-img-fallback'); this.style.display='none';" alt="">
+                <div class="tip-img-icon mental"><i class="fa-solid fa-brain"></i></div>
+            </div>
+            <div class="tip-body">
+                <div class="tip-category-chip "><i class="fa-solid fa-brain"></i> الصحة النفسية</div>
+                <h3>كيف تتحكم في التوتر والقلق بأساليب علمية مجربة</h3>
+                <p>التوتر المزمن يؤثر على القلب، المناعة، والنوم. تعرف على تقنيات التنفس العميق، التأمل، وإدارة الوقت التي أثبتت فاعليتها في تقليل مستويات الكورتيزول.</p>
+
+            </div>
+            <div class="tip-footer">
+                <button class="read-more-btn small" onclick="openModal(2)">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </article>
+
+        <article class="tip-card" data-cat="bones" data-index="3">
+            <div class="tip-img">
+                <img src="~/assets/image/tip3.webp"
+                     onerror="this.parentElement.classList.add('tip-img-fallback'); this.style.display='none';" alt="">
+                <div class="tip-img-icon bones"><i class="fa-solid fa-bone"></i></div>
+            </div>
+            <div class="tip-body">
+                <div class="tip-category-chip"><i class="fa-solid fa-bone"></i> العظام والمفاصل</div>
+                <h3>الوقاية من هشاشة العظام: الكالسيوم وفيتامين D</h3>
+                <p>هشاشة العظام لا تؤثر فقط على كبار السن — يبدأ بناء الكثافة العظمية من سن المراهقة. اكتشف أفضل المصادر الغذائية للكالسيوم وكيفية الحصول على فيتامين D الكافي.</p>
+
+            </div>
+            <div class="tip-footer">
+                <button class="read-more-btn small" onclick="openModal(3)">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </article>
+
+        <article class="tip-card" data-cat="kids" data-index="4">
+            <div class="tip-img">
+                <img src="~/assets/image/tip4.jfif"
+                     onerror="this.parentElement.classList.add('tip-img-fallback'); this.style.display='none';" alt="">
+                <div class="tip-img-icon kids"><i class="fa-solid fa-baby"></i></div>
+            </div>
+            <div class="tip-body">
+                <div class="tip-category-chip"><i class="fa-solid fa-baby"></i> صحة الأطفال</div>
+                <h3>جدول التطعيمات الأساسية للأطفال وأهميته</h3>
+                <p>التطعيمات هي الدرع الواقي الأول لطفلك من الأمراض الخطيرة. تعرف على الجدول الرسمي لوزارة الصحة وماذا تفعل إذا فاتك موعد تطعيم.</p>
+            </div>
+            <div class="tip-footer">
+                <button class="read-more-btn small" onclick="openModal(4)">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </article>
+
+        <article class="tip-card" data-cat="diabetes" data-index="5">
+            <div class="tip-img">
+                <img src="~/assets/image/tip5.webp"
+                     onerror="this.parentElement.classList.add('tip-img-fallback'); this.style.display='none';" alt="">
+                <div class="tip-img-icon diabetes"><i class="fa-solid fa-syringe"></i></div>
+            </div>
+            <div class="tip-body">
+                <div class="tip-category-chip"><i class="fa-solid fa-syringe"></i> السكري والغدد</div>
+                <h3>السيطرة على سكر الدم: نظام غذائي ونمط حياة</h3>
+                <p>مرض السكري من النوع الثاني يمكن السيطرة عليه بل وعكسه في بعض الحالات من خلال التغييرات الغذائية وزيادة النشاط البدني. إليك الدليل العملي الشامل.</p>
+            </div>
+            <div class="tip-footer">
+                <button class="read-more-btn small" onclick="openModal(5)">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </article>
+
+        <article class="tip-card" data-cat="skin" data-index="6">
+            <div class="tip-img">
+                <img src="~/assets/image/tip6.webp"
+                     onerror="this.parentElement.classList.add('tip-img-fallback'); this.style.display='none';" alt="">
+                <div class="tip-img-icon skin"><i class="fa-solid fa-sun"></i></div>
+            </div>
+            <div class="tip-body">
+                <div class="tip-category-chip"><i class="fa-solid fa-sun"></i> الجلد والشعر</div>
+                <h3>حماية بشرتك من الشمس: دليل واقي الشمس الصحيح</h3>
+                <p>الأشعة فوق البنفسجية هي السبب الأول لشيخوخة الجلد وسرطان الجلد. تعلم كيف تختار واقي الشمس المناسب وكيف تضعه بشكل صحيح لحماية فعالة.</p>
+            </div>
+            <div class="tip-footer">
+                <button class="read-more-btn small" onclick="openModal(6)">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </article>
+
+        <article class="tip-card" data-cat="heart" data-index="7">
+            <div class="tip-img">
+                <img src="~/assets/image/tip7.jpg"
+                     onerror="this.parentElement.classList.add('tip-img-fallback'); this.style.display='none';" alt="">
+                <div class="tip-img-icon heart"><i class="fa-solid fa-heart-pulse"></i></div>
+            </div>
+            <div class="tip-body">
+                <div class="tip-category-chip"><i class="fa-solid fa-heart-pulse"></i> القلب والأوعية</div>
+                <h3>ضغط الدم المرتفع: الأعراض الصامتة وطرق السيطرة</h3>
+                <p>يلقب ضغط الدم المرتفع بـ"القاتل الصامت" لأنه غالباً لا يسبب أعراضاً واضحة. تعرف على أرقام الضغط الطبيعي وكيف تسيطر عليه بدون دواء أحياناً.</p>
+            </div>
+            <div class="tip-footer">
+                <button class="read-more-btn small" onclick="openModal(7)">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </article>
+
+        <article class="tip-card" data-cat="nutrition" data-index="8">
+            <div class="tip-img">
+                <img src="~/assets/image/tip8.jfif"
+                     onerror="this.parentElement.classList.add('tip-img-fallback'); this.style.display='none';" alt="">
+                <div class="tip-img-icon nutrition"><i class="fa-solid fa-apple-whole"></i></div>
+            </div>
+            <div class="tip-body">
+                <div class="tip-category-chip nutrition"><i class="fa-solid fa-apple-whole"></i> التغذية</div>
+                <h3>الألياف الغذائية: سر الهضم السليم وخفض الكوليسترول</h3>
+                <p>الألياف الغذائية لا تُغذّي جسمك فقط — تغذّي البكتيريا النافعة في أمعائك أيضاً. تعرف على أفضل المصادر الغذائية للألياف وكيف تزيد استهلاكها بشكل تدريجي.</p>
+            </div>
+            <div class="tip-footer">
+                <button class="read-more-btn small" onclick="openModal(8)">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </article>
+
+        <article class="tip-card" data-cat="mental" data-index="9">
+            <div class="tip-img">
+                <img src="~/assets/image/tip9.jpg"
+                     onerror="this.parentElement.classList.add('tip-img-fallback'); this.style.display='none';" alt="">
+                <div class="tip-img-icon mental"><i class="fa-solid fa-brain"></i></div>
+            </div>
+            <div class="tip-body">
+                <div class="tip-category-chip"><i class="fa-solid fa-brain"></i> الصحة النفسية</div>
+                <h3>النوم الصحي: كم ساعة تحتاج وكيف تحسّن جودته</h3>
+                <p>قلة النوم تؤدي إلى السمنة، ضعف المناعة، والاكتئاب. اكتشف قواعد "نظافة النوم" التي تضمن لك نوماً عميقاً ومنتظماً دون الحاجة لأدوية.</p>
+            </div>
+            <div class="tip-footer">
+                <button class="read-more-btn small" onclick="openModal(9)">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </article>
+
+    </div>
+
+    <div class="tips-empty" id="tipsEmpty">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <h3>لا توجد نتائج</h3>
+        <p>جرب كلمة بحث مختلفة أو اختر تصنيفاً آخر</p>
+    </div>
+
+</section>
+
+<section class="quick-tips-section">
+    <div class="section-header">
+        <div>
+            <h2>نصائح سريعة</h2>
+            <div class="section-line line-color"></div>
+        </div>
+    </div>
+    <div class="quick-tips-grid">
+        <div class="quick-tip-card">
+            <div class="qt-icon"><i class="fa-solid fa-droplet"></i></div>
+            <h4>اشرب ٨ أكواب ماء يومياً</h4>
+            <p>الترطيب الكافي يحسّن التركيز ويحافظ على صحة الكلى</p>
+        </div>
+        <div class="quick-tip-card">
+            <div class="qt-icon"><i class="fa-solid fa-person-walking"></i></div>
+            <h4>٣٠ دقيقة مشي يومياً</h4>
+            <p>المشي المنتظم يقلل خطر أمراض القلب بنسبة ٣٠٪</p>
+        </div>
+        <div class="quick-tip-card">
+            <div class="qt-icon"><i class="fa-solid fa-moon"></i></div>
+            <h4>نم ٧-٩ ساعات ليلاً</h4>
+            <p>النوم الكافي يعزز المناعة ويُحسّن الذاكرة والتركيز</p>
+        </div>
+        <div class="quick-tip-card">
+            <div class="qt-icon"><i class="fa-solid fa-ban-smoking"></i></div>
+            <h4>تجنب التدخين تماماً</h4>
+            <p>الإقلاع عن التدخين يقلل خطر السرطان والأمراض القلبية</p>
+        </div>
+        <div class="quick-tip-card">
+            <div class="qt-icon"><i class="fa-solid fa-hand-sparkles"></i></div>
+            <h4>اغسل يديك باستمرار</h4>
+            <p>غسل اليدين يمنع ٨٠٪ من الأمراض المعدية الشائعة</p>
+        </div>
+    </div>
+</section>
+
+<div class="modal-overlay" id="tipModal" onclick="closeModalOutside(event)">
+    <div class="tip-modal">
+        <div class="modal-header">
+            <div class="modal-category" id="modalCategory"></div>
+            <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <h2 id="modalTitle"></h2>
+            <div class="modal-meta" id="modalMeta"></div>
+            <div class="modal-content" id="modalContent"></div>
+        </div>
+    </div>
+</div>

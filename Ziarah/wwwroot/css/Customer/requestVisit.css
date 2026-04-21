@@ -32,7 +32,7 @@ a {
     position: absolute;
     inset: 0;
     border-radius: 5px;
-    background: linear-gradient(rgba(18, 141, 207, 0.712), rgba(18, 201, 207, 0.705)),url("../assets/image/1765750092.jpg") center/cover no-repeat;
+    background: linear-gradient(rgba(18, 141, 207, 0.712), rgba(18, 201, 207, 0.705)),url("/assets/image/1765750092.jpg") center/cover no-repeat;
     z-index: 0;
     overflow: hidden;
     pointer-events: none;

@@ -1,80 +1,146 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Ziarah</title>
-    <script type="importmap"></script>
-    <img src="~/assets/images/logo.png" alt="Logo">
-    <link rel="stylesheet" href="~/css/Customer/style.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Customer/header.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Customer/footer.css" asp-append-version="true" />
-    <script src="~/js/header.js"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <title>@ViewData["Title"] - زيارة</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="~/assets/logo.png">
+
+    <link rel="stylesheet" href="~/css/Customer/header.css" />
+    <link rel="stylesheet" href="~/css/Customer/footer.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    @RenderSection("Styles", required: false)
 </head>
+
 <body>
-    <header>
-        <nav class="nav">
-            <div class="lang-theme">
 
-                <div class="nav-theme" onclick="toggleTheme()">
-                    <i class="fa-solid fa-moon" id="navThemeIcon"></i>
-                    <span>تغيير الوضع</span>
-                </div>
+    <header class="header">
 
-                <div class="nav-lang">
-                    <i class="fa-solid fa-earth-americas"></i>
-                    <select onchange="changeLang(this.value)">
-                        <option value="ar">العربية</option>
-                        <option value="en">English</option>
-                    </select>
-                </div>
-            </div>
-            <a href="index.html" class="nav-active">الرئيسية</a>
-            <div class="list-services">
-                <a href="requestVisit.html">الخدمات   <i class="fa-solid fas fa-angle-down"></i></a>
-                <ul class="items-services">
-                    <li>طلب طبيب</li>
-                    <li>طلب تمريض</li>
-                    <li>أخذ عينة</li>
-                    <li>علاج طبيعي</li>
-                </ul>
-            </div>
-            <a href="requestVisit.html">طلب زيارة منزلية</a>
-            <a href="insurance.html">تأمين اعضاء هيئة التدريس</a>
-            <a href="medicalTips.html">نصائح طبية</a>
-            <a href="about.html">من نحن</a>
-            <a href="contact.html">تواصل معنا</a>
-
-        </nav>
-
-        <div class="buttons">
-            <a href="register.html">
-                <button class="join-btn">إنشاء حساب</button>
-            </a>
-
-            <a href="login.html">
-                <button class="login-btn">تسجيل الدخول</button>
-            </a>
+        <div class="top-bar">            
+            <i class="fa-solid fa-xmark" id="closeTopBar" onclick="closeTopBar()"></i>
+            <p>
+                هل أنت طبيب أنضم الينا الان وقدم خدمات الزيارة المنزلية 
+                <a href="register.html">اضغط للانضمام</a>
+            </p>
         </div>
+
+        <div class="middle-header">
+
+            <div class="logo">
+                <a asp-controller="Home" asp-action="index" ><img src="~/assets/logo.png" alt="شعار زيارة"></a>
+            </div>
+            <div class="search">
+                <input type="text" placeholder="ابحث عن طبيب أو خدمة..." id="searchInput" autocomplete="off">
+                <div class="search-results-dropdown" id="searchDropdown">
+                    <div class="search-results-header">
+                        <span>
+                            <strong id="resultsCount"></strong>
+                            &nbsp;لـ "<span id="searchQuery"></span>"
+                        </span>
+                        <button class="search-close-btn" onclick="closeSearchDropdown()">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="search-loading" id="searchLoading">
+                        <div class="search-spinner"></div>
+                        <p>جاري البحث...</p>
+                    </div>
+                    <div class="search-empty" id="searchEmpty">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <p>لا توجد نتائج مطابقة</p>
+                    </div>
+                    <div class="search-results-list" id="searchResultsList"></div>
+                </div>
+            </div>
+
+            <div class="theme-toggle" onclick="toggleTheme()">
+                <i class="fa-solid fa-moon"></i>
+            </div>
+
+            <div class="lang">                
+                <i class="fa-solid fa-earth-americas"></i>
+                <select onchange=""> 
+                    <option value="ar">العربية</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="nav-bar">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <nav class="nav">
+                <div class="lang-theme">
+
+                    <div class="nav-theme" onclick="toggleTheme()" >
+                        <i class="fa-solid fa-moon" id="navThemeIcon"></i>
+                        <span>تغيير الوضع</span>
+                    </div>
+
+                    <div class="nav-lang" >
+                        <i class="fa-solid fa-earth-americas"></i>
+                        <select onchange="changeLang(this.value)">
+                            <option value="ar">العربية</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
+                <a asp-controller="Home" asp-action="index" class="nav-active">الرئيسية</a>
+                <div class="list-services">
+                    <a asp-controller="RequestVisit" asp-action="RequestVisit">الخدمات   <i class="fa-solid fas fa-angle-down"></i></a>
+                    <ul class="items-services">
+                        <li>طلب طبيب</li>
+                        <li>طلب تمريض</li>
+                        <li>أخذ عينة</li>
+                        <li>علاج طبيعي</li>                        
+                    </ul>              
+                </div>
+                <a asp-controller="RequestVisit" asp-action="RequestVisit">طلب زيارة منزلية</a>
+                <a asp-controller="Insurance" asp-action="Insurance">تأمين اعضاء هيئة التدريس</a>
+                <a asp-controller="MedicalTips" asp-action="MedicalTips">نصائح طبية</a>
+                <a asp-controller="About" asp-action="About" >من نحن</a>
+                <a asp-controller="Contact" asp-action="Contact">تواصل معنا</a>
+
+            </nav>
+
+            <div class="buttons">
+                <a href="register.html">
+                    <button class="join-btn">إنشاء حساب</button>
+                </a>
+
+                <a href="login.html">
+                    <button class="login-btn">تسجيل الدخول</button>
+                </a>
+            </div>
 
 
         </div>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Ziarah - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer>
+        <div class="footer-small">
+            <div class="footer-logo">
+                <img src="~/assets/logo.png" alt="شعار منصة زيارة">
+            </div>
+            <p> حقوق النشر والطبع محفوظه زيارة | &copy;  2026</p>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="~/js/Customer/header.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-</html>
+
+</html> 

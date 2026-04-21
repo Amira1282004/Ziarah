@@ -154,7 +154,7 @@ a {
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    background: linear-gradient(rgba(18, 141, 207, 0.712), rgba(18, 201, 207, 0.705)), url("../assets/image/vecteezy_doctor-giving-hope-close-up-shot-of-young-female-physician_26522099.jpg");
+    background: linear-gradient(rgba(18, 141, 207, 0.712), rgba(18, 201, 207, 0.705)), url("/assets/image/vecteezy_doctor-giving-hope-close-up-shot-of-young-female-physician_26522099.jpg");
     background-size: cover;
 
 }

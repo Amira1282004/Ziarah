@@ -1,54 +1,59 @@
 ﻿
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "الصفحة الرئيسية";
 }
-
-</header>
+ @section Styles {
+    <link rel="stylesheet" href="~/css/Customer/style.css" />
+}
+@section Scripts {
+    <script src="~/js/Customer/script.js"></script>
+}
 <main>
     <div class="main-background">
         <div class="img-wrapper">
-            <div class="circle-bg"></div>
-            <img class="main-img" src="assets/image/b3b3faed5a578a21a8fcec059f989ca0964f6737.png" alt="">
-        </div>
-        <div class="text-center">
-            <span>رعايتك الصحية تبدأ من هنا</span>
-            <p>
-                نقدم لك خدمات طبية متكاملة بأعلى معايير الجودة، حيث نحرص على توفير رعاية صحية آمنة وسريعة على يد نخبة من الأطباء
-                المتخصصين وباستخدام أحدث التقنيات الطبية
-            </p>
-
-            <div class="btns-main">
-                <a class="book-now" href="requestVisit.html">
-                    طلب زيارة الان <i class="fa-solid fa-arrow-left"></i>
-                </a>
-
-                <a class="insurance" href="insurance.html">
-                    لدي تأمين <i class="fa-solid fa-arrow-left"></i>
-                </a>
-            </div>
-            <div class="btn-emerg">
-                <button class="emerg" onclick="openEmergency()">
-                    طوارئ <i class="fa-solid fa-triangle-exclamation"></i>
-                </button>
-            </div>
-        </div>
+        <div class="circle-bg"></div>
+        <img class="main-img" src="assets/image/b3b3faed5a578a21a8fcec059f989ca0964f6737.png" alt="">
     </div>
+
+    <div class="text-center">
+        <span>رعايتك الصحية تبدأ من هنا</span>
+        <p >نقدم لك خدمات طبية متكاملة بأعلى معايير الجودة، حيث نحرص على توفير رعاية صحية آمنة وسريعة على يد نخبة من الأطباء
+            المتخصصين وباستخدام أحدث التقنيات الطبية
+        </p>
+
+        <div class="btns-main">
+                <a class="book-now" asp-controller="RequestVisit" asp-action="RequestVisit">
+                طلب زيارة الان <i class="fa-solid fa-arrow-left"></i>
+            </a>
+
+                <a class="insurance" asp-controller="Insurance" asp-action="Insurance">
+                لدي تأمين <i class="fa-solid fa-arrow-left"></i>
+            </a>
+        </div>
+        <div class="btn-emerg">
+            <button class="emerg" onclick="openEmergency()">
+                طوارئ <i class="fa-solid fa-triangle-exclamation"></i>
+            </button>
+        </div> 
+    </div> 
+
     <div class="emergency-overlay" id="emergencyModal">
         <div class="emergency-modal">
             <span class="close" onclick="closeEmergency()">
-                <i class="fa-solid fa-xmark"></i>
+            <i  class="fa-solid fa-xmark" ></i>
             </span>
             <div class="emergency-icon">
-                <i class="fa-solid fa-phone"></i>
-            </div>
-            <h2>رقم الطوارئ</h2>
-            <p class="emergency-number">123</p>
+            <i class="fa-solid fa-phone"></i>
+            </div> 
+            <h2>رقم الطوارئ</h2>   
+            <p class="emergency-number">123</p>   
             <a href="tel:123" class="call-btn">
                 اتصل الآن
             </a>
         </div>
     </div>
+
 </main>
 
 <section class="we" id="we">
@@ -63,9 +68,9 @@
         </p>
     </div>
 </section>
+    
 <section class="home-visit">
     <div class="visit-container">
-
         <div class="visit-steps">
             <h2>كيف تطلب زيارة منزلية ؟</h2>
             <div class="line line-w"></div>
@@ -105,19 +110,17 @@
         </div>
         <div class="visit-video">
             <video controls>
-                <source src="assets/video/WhatsApp Video 2026-03-30 at 1.39.12 PM.mp4" type="video/mp4">
+                <source src="~/assets/video/WhatsApp Video 2026-03-30 at 1.39.12 PM.mp4" type="video/mp4">
                 متصفحك لا يدعم تشغيل الفيديو
             </video>
         </div>
     </div>
 </section>
-</div>
-
 
 <section class="services">
     <div class="services-container">
         <h2 class="section-title">الخدمات</h2>
-        <div class="services-cards">
+        <div class="services-cards">    
             <div class="card-sc">
                 <div class="icon"><i class="fa-solid fa-user-doctor"></i></div>
                 <h3>طلب طبيب</h3>
@@ -134,38 +137,36 @@
                 <div class="icon"> <i class="fa-solid fa-user-injured"></i></div>
                 <h3>علاج طبيعي</h3>
             </div>
-
         </div>
-        <a class="start-btn" href="requestVisit.html">
+        <a class="start-btn" asp-controller="RequestVisit" asp-action="RequestVisit">
             أبدأ الان
             <i class="fa-solid fa-chevron-left"></i>
         </a>
-    </div>
-</section>
+    </div> 
+</section> 
+
 <section class="provide">
     <div class="provide-container">
-
         <div class="provide-text">
-            <h2>انضم إلينا كمقدم خدمات طبية</h2>
-            <p>
-                كن جزءًا من فريقنا وقدم خدماتك الطبية بسهولة واحترافية،
-                واحصل على عدد أكبر من المرضى وزيادة دخلك
-            </p>
+                <h2>انضم إلينا كمقدم خدمات طبية</h2>
+                <p>
+                    كن جزءًا من فريقنا وقدم خدماتك الطبية بسهولة واحترافية،
+                    واحصل على عدد أكبر من المرضى وزيادة دخلك
+                </p>
 
-            <a href="register.html">
-                <button class="joinnow-btn">
-                    انضم الآن
-                    <i class="fa-solid fa-arrow-left"></i>
-                </button>
-            </a>
+                <a href="register.html">
+                    <button class="joinnow-btn">
+                        انضم الآن
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </a>
         </div>
-
         <div class="img-provide">
             <img src="assets/image/12382.png" alt="مقدمين خدمات">
         </div>
-
     </div>
 </section>
+
 <section class="contact-section" id="contact">
     <div class="contact-wrapper">
         <div class="contact-title">
@@ -174,15 +175,15 @@
         </div>
         <div class="contact-container">
             <h3>كيف يمكننا مساعدتك ؟</h3>
-
+        
             <form>
                 <div class="form-group">
                     <label>اسمك بالكامل</label>
                     <input type="text" required>
                 </div>
-
+        
                 <div class="form-row">
-
+        
                     <div class="form-group">
                         <label>رقم الهاتف</label>
                         <input type="text" placeholder="010xxxxxxxxx" required>
@@ -201,3 +202,4 @@
 
         </div>
     </div>
+</section>
