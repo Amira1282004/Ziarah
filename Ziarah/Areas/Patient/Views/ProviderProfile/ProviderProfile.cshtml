@@ -1,0 +1,331 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Ziarah.Areas.Patient.Models.PatientProviderProfileViewModel
+@{
+    ViewData["Title"] = "معلومات عن مقدم الخدمة";
+
+    var isNurse      = Model.Type == "nurse";
+    var titlePrefix  = isNurse ? "أ." : "د.";
+    var displayName  = $"{titlePrefix} {Model.FullName}";
+    var hasPhoto     = !string.IsNullOrWhiteSpace(Model.ImageUrl);
+    var hasNidFront  = !string.IsNullOrWhiteSpace(Model.PatientNationalIdFrontUrl);
+    var hasNidBack   = !string.IsNullOrWhiteSpace(Model.PatientNationalIdBackUrl);
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Patient/providerProfile-reg.css" />
+}
+@section Scripts {
+    <script src="~/js/Patient/providerProfile-reg.js"></script>
+}
+
+<section class="provider-section" data-provider-id="@Model.Id" data-provider-type="@Model.Type">
+    <div class="top-banner"></div>
+    <div class="provider-card">
+
+        <div class="right-side">
+            <div class="provider-header">
+                <div class="provider-image">
+                    @if (hasPhoto)
+                    {
+                        <img src="@Model.ImageUrl" alt="@displayName">
+                    }
+                    else
+                    {
+                        <div class="provider-image-placeholder @(isNurse ? "nurse" : "doctor")" role="img" aria-label="@displayName">
+                            <i class="fa-solid @(isNurse ? "fa-user-nurse" : "fa-user-doctor")"></i>
+                        </div>
+                    }
+                </div>
+                <div class="provider-info">
+                    <h2>@displayName</h2>
+                    <span class="specialty">@Model.Specialty</span>
+                    <p>
+                        @Model.Bio
+                    </p>
+                    <p>مناطق الخدمة: @Model.Address</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="left-side">
+            <div class="price-box">
+                <div class="icon"><i class="fa-solid fa-briefcase-medical"></i></div>
+                <div>
+                    <p class="label">سعر الكشف</p>
+                    <p class="price">@Model.Price.ToString("0") جنيه</p>
+                </div>
+            </div>
+            <button class="btn primary">
+                <i class="fa-solid fa-calendar-plus"></i> @(Model.Type == "nurse" ? "طلب ممرض" : "طلب الآن")
+            </button>
+            <a class="btn outline" asp-controller="Contact" asp-action="Contact">
+                تواصل معنا
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="provider-stats">
+    <div class="stat-item">
+        <i class="fa-solid fa-user-group"></i>
+        <strong>@Model.TotalRatings</strong>
+        <span>مريض تمت خدمتهم</span>
+    </div>
+    <div class="stat-item">
+        <i class="fa-solid fa-calendar-check"></i>
+        <strong>+150</strong>
+        <span>زيارة منزلية</span>
+    </div>
+    <div class="stat-item">
+        <i class="fa-solid fa-star"></i>
+        <strong>@Model.Rating.ToString("0.0")</strong>
+        <span>متوسط التقييم</span>
+    </div>
+    <div class="stat-item">
+        <i class="fa-solid fa-clock"></i>
+        <strong>@Model.ExperienceYears</strong>
+        <span>سنوات خبرة</span>
+    </div>
+</div>
+
+<div class="ratings">
+    <div class="ratings-header">
+        <h3>التقييمات</h3>
+        <span class="rate">@Model.Rating.ToString("0.0") <i class="fa-solid fa-star"></i></span>
+    </div>
+    <div class="reviews-grid">
+        <div class="review-card">
+            <div class="review-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
+                <span>علي أحمد إبراهيم</span>
+                <div class="star">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star gray"></i>
+                </div>
+            </div>
+            <p>دكتور ممتاز، متعاون جداً وشرح الحالة بالتفصيل</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
+                <span>محمد عبد الرحمن</span>
+                <div class="star">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+            </div>
+            <p>خدمة ممتازة وسريعة، وصل في الموعد المحدد تماماً</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
+                <span>سارة محمود</span>
+                <div class="star">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star gray"></i>
+                </div>
+            </div>
+            <p>أنصح به بشدة، تشخيص دقيق ومعاملة محترمة</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
+                <span>أحمد السيد</span>
+                <div class="star">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+            </div>
+            <p>تجربة رائعة، الطبيب محترف ومهتم بالمريض</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
+                <span>فاطمة علي</span>
+                <div class="star">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star gray"></i>
+                    <i class="fa-solid fa-star gray"></i>
+                </div>
+            </div>
+            <p>جيد، لكن تأخر قليلاً عن الموعد المحدد</p>
+        </div>
+    </div>
+</div>
+
+
+<section class="rating-box-section">
+    <div class="rating-box">
+        <h3>قيم الطبيب</h3>
+        <div class="stars" id="stars">
+            <div class="stars-row">
+                <i class="fa-solid fa-star" data-value="1"></i>
+                <i class="fa-solid fa-star" data-value="2"></i>
+                <i class="fa-solid fa-star" data-value="3"></i>
+                <i class="fa-solid fa-star" data-value="4"></i>
+                <i class="fa-solid fa-star" data-value="5"></i>
+            </div>
+            <textarea id="review" name="Comment" placeholder="اكتب تعليقك هنا..."></textarea>
+        </div>
+        <button onclick="submitRating()">
+            نشر التقييم
+        </button>
+    </div>
+</section>
+
+<div class="overlay" id="bookingOverlay" onclick="closeBookingIfOutside(event)">
+    <div class="booking-modal">
+        <div class="booking-modal-header">
+            <div class="booking-modal-title">طلب زيارة</div>
+            <button class="booking-close-btn" onclick="closeBookingModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="booking-provider-info">
+            <div class="booking-provider-img">
+                <img id="bookingProviderImg" src="" alt="">
+            </div>
+            <div>
+                <div class="booking-provider-name"  id="bookingProviderName"></div>
+                <div class="booking-provider-spec"   id="bookingProviderSpec"></div>
+                <div class="booking-provider-price"  id="bookingProviderPrice"></div>
+            </div>
+        </div>
+
+        <div class="booking-source-toggle">
+            <button class="source-btn active" id="btnUseAccount"
+                    onclick="switchBookingSource('account')">
+                <i class="fa-solid fa-user-check"></i> بيانات حسابي
+            </button>
+            <button class="source-btn" id="btnUseNew"
+                    onclick="switchBookingSource('new')">
+                <i class="fa-solid fa-user-plus"></i> بيانات جديدة
+            </button>
+        </div>
+
+        <div class="booking-account-preview" id="bookingAccountPreview">
+            <div class="account-preview-row">
+                <span class="account-preview-label"><i class="fa-solid fa-user"></i> الاسم</span>
+                <span class="account-preview-value" id="previewName">@Model.PatientFullName</span>
+            </div>
+            <div class="account-preview-row">
+                <span class="account-preview-label"><i class="fa-solid fa-phone"></i> الهاتف</span>
+                <span class="account-preview-value" id="previewPhone">@Model.PatientPhone</span>
+            </div>
+            <div class="account-preview-row">
+                <span class="account-preview-label"><i class="fa-solid fa-envelope"></i> الإيميل</span>
+                <span class="account-preview-value" id="previewEmail">@Model.PatientEmail</span>
+            </div>
+
+
+            <div class="nid-status-row" id="nidStatusRow">
+                @if (hasNidFront && hasNidBack)
+                {
+                    <div class="account-preview-row">
+                        <span class="account-preview-label"><i class="fa-solid fa-id-card"></i>بطاقة الرقم القومي</span>
+                        <span class="account-preview-value" >محفوظة مسبقاً</span>
+                    </div>
+                    <input type="hidden" name="SavedNidFront" value="@Model.PatientNationalIdFrontUrl">
+                    <input type="hidden" name="SavedNidBack"  value="@Model.PatientNationalIdBackUrl">
+                }
+                else
+                {
+                    <div class="nid-upload-hint">
+                        <i class="fa-solid fa-triangle-exclamation" style="color:#e6a817;"></i>
+                        يرجى رفع صور بطاقة الرقم القومي
+                    </div>
+                }
+            </div>
+        </div>
+
+        <form id="bookingForm"
+              asp-area="Patient"
+              asp-controller="RequestVisit"
+              asp-action="SubmitVisit"
+              method="post"
+              enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="ProviderType" id="bookingVisitType"  value="doctor">
+            <input type="hidden" name="ProviderId"   id="bookingProviderId" value="0">
+            <input type="hidden" name="useAccount"   id="bookingUseAccount" value="true">
+
+            <div class="booking-new-fields" id="bookingNewFields" style="display:none;">
+                <div class="double-input">
+                    <div class="input-group">
+                        <label>الاسم بالكامل</label>
+                        <input type="text" name="FullName" placeholder="">
+                    </div>
+                    <div class="input-group">
+                        <label>رقم الهاتف</label>
+                        <input type="text" name="Phone" placeholder="01xxxxxxxxx" pattern="^01[0125][0-9]{8}$">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>البريد الإلكتروني</span></label>
+                    <input type="email" name="Email" placeholder="info@gmail.com">
+                </div>
+            </div>
+
+            <div id="nidUploadFields"
+                 style="@(hasNidFront && hasNidBack ? "display:none;" : "")">
+                <div class="double-input">
+                    <div class="input-group file-upload">
+                        <label for="nationalIdFront" id="nationalIdFrontLabel" >
+                            <i class="fa-solid fa-upload"></i> صورة وجه بطاقة الرقم القومي
+                        </label>
+                        <input type="file" id="nationalIdFront" name="NationalIdFront"
+                               accept="image/*" @(hasNidFront && hasNidBack ? "" : "required")>
+                    </div>
+                    <div class="input-group file-upload">
+                        <label for="nationalIdBack" id="nationalIdBackLabel" >
+                            <i class="fa-solid fa-upload"></i> صورة ظهر بطاقة الرقم القومي
+                        </label>
+                        <input type="file" id="nationalIdBack" name="NationalIdBack"
+                               accept="image/*" @(hasNidFront && hasNidBack ? "" : "required")>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>العنوان بالتفصيل</label>
+                <input type="text" name="Address" placeholder="المحافظة - الحي - الشارع - رقم المبنى...">
+            </div>
+            <div class="double-input">
+                <div class="input-group">
+                    <label>اختيار الموعد</label>
+                    <input type="datetime-local" name="RequestedVisitAt"
+                           id="bookingRequestedVisitAt" required>
+                </div>
+                <div class="input-group">
+                    <label>الحالة المرضية</label>
+                    <input type="text" name="Condition" placeholder="اذكر الأعراض..." required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>ملاحظات إضافية <span class="optional-label">(اختياري)</span></label>
+                <textarea name="Notes" placeholder="أي معلومات إضافية تساعد الطبيب..."></textarea>
+            </div>
+
+            <div class="booking-form-footer">
+                <button type="submit" class="submit-btn" id="bookingSubmitBtn">طلب الآن</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="overlay" id="successOverlay">
+    <div class="success-modal">
+        <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+        <h2>تم إرسال طلبك بنجاح</h2>
+        <p>سيتواصل معك أحد ممثلينا في أقرب وقت لتأكيد الزيارة</p>
+        <button onclick="closeSuccessModal()">حسناً</button>
+    </div>
+</div>

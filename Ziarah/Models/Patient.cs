@@ -11,6 +11,10 @@ public partial class Patient
 
     public int? InsuranceId { get; set; }
 
+    public bool HasInsurance { get; set; }
+
+    public string? InsuranceImage { get; set; }
+
     public string? BloodType { get; set; }
 
     public decimal? Height { get; set; }

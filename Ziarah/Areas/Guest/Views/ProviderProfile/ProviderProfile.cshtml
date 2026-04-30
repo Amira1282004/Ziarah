@@ -1,0 +1,271 @@
+@model Ziarah.Areas.Guest.Models.ProviderProfileViewModel
+@{
+    ViewData["Title"] = "معلومات عن مقدم الخدمة";
+    var isNurse = string.Equals(Model.Type, "nurse", StringComparison.OrdinalIgnoreCase);
+    var hasPhoto = !string.IsNullOrWhiteSpace(Model.ImageUrl);
+    var titlePrefix = isNurse ? "أ." : "د.";
+    var displayName = $"{titlePrefix} {Model.FullName}";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Guest/providerProfile.css" />
+}
+@section Scripts {
+    <script src="~/js/Guest/providerProfile.js"></script>
+}
+<section class="provider-section" data-provider-id="@Model.Id" data-provider-type="@Model.Type">
+    <div class="top-banner"></div>
+    <div class="provider-card">
+
+        <div class="right-side">
+            <div class="provider-header">
+                <div class="provider-image">
+                    @if (hasPhoto)
+                    {
+                        <img src="@Model.ImageUrl" alt="@displayName">
+                    }
+                    else
+                    {
+                        <div class="provider-image-placeholder @(isNurse ? "nurse" : "doctor")" role="img" aria-label="@displayName">
+                            <i class="fa-solid @(isNurse ? "fa-user-nurse" : "fa-user-doctor")"></i>
+                        </div>
+                    }
+                </div>
+                <div class="provider-info">
+                    <h2>@displayName</h2>
+                    <span class="specialty">@Model.Specialty</span>
+                    <p>
+                        @Model.Bio
+                    </p>
+                    <p>مناطق الخدمة: @Model.Address</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="left-side">
+            <div class="price-box">
+                <div class="icon"><i class="fa-solid fa-briefcase-medical"></i></div>
+                <div>
+                    <p class="label">سعر الكشف</p>
+                    <p class="price">@Model.Price.ToString("0") جنيه</p>
+                </div>
+            </div>
+            <button class="btn primary">
+                <i class="fa-solid fa-calendar-plus"></i> @(Model.Type == "nurse" ? "طلب ممرض" : "طلب الآن")
+            </button>
+            <a class="btn outline" asp-controller="Contact" asp-action="Contact">
+                تواصل معنا
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="provider-stats">
+    <div class="stat-item">
+        <i class="fa-solid fa-user-group"></i>
+        <strong>@Model.TotalRatings</strong>
+        <span>مريض تمت خدمتهم</span>
+    </div>
+    <div class="stat-item">
+        <i class="fa-solid fa-calendar-check"></i>
+        <strong>+150</strong>
+        <span>زيارة منزلية</span>
+    </div>
+    <div class="stat-item">
+        <i class="fa-solid fa-star"></i>
+        <strong>@Model.Rating.ToString("0.0")</strong>
+        <span>متوسط التقييم</span>
+    </div>
+    <div class="stat-item">
+        <i class="fa-solid fa-clock"></i>
+        <strong>@Model.ExperienceYears</strong>
+        <span>سنوات خبرة</span>
+    </div>
+</div>
+
+<div class="ratings">
+    <div class="ratings-header">
+        <h3>التقييمات</h3>
+        <span class="rate">@Model.Rating.ToString("0.0") <i class="fa-solid fa-star"></i></span>
+    </div>
+    <div class="reviews-grid">
+        <div class="review-card">
+            <div class="review-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
+                <span>علي أحمد إبراهيم</span>
+                <div class="star">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star gray"></i>
+                </div>
+            </div>
+            <p>دكتور ممتاز، متعاون جداً وشرح الحالة بالتفصيل</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
+                <span>محمد عبد الرحمن</span>
+                <div class="star">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+            </div>
+            <p>خدمة ممتازة وسريعة، وصل في الموعد المحدد تماماً</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
+                <span>سارة محمود</span>
+                <div class="star">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star gray"></i>
+                </div>
+            </div>
+            <p>أنصح به بشدة، تشخيص دقيق ومعاملة محترمة</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
+                <span>أحمد السيد</span>
+                <div class="star">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+            </div>
+            <p>تجربة رائعة، الطبيب محترف ومهتم بالمريض</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
+                <span>فاطمة علي</span>
+                <div class="star">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star gray"></i>
+                    <i class="fa-solid fa-star gray"></i>
+                </div>
+            </div>
+            <p>جيد، لكن تأخر قليلاً عن الموعد المحدد</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="overlay" id="bookingOverlay" onclick="closeBookingIfOutside(event)">
+    <div class="booking-modal">
+        <div class="booking-modal-header">
+            <div class="booking-modal-title">
+                طلب زيارة
+            </div>
+            <button class="booking-close-btn" onclick="closeBookingModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="booking-provider-info" id="bookingDoctorInfo">
+            <div class="booking-provider-img">
+                @if (hasPhoto)
+                {
+                    <img src="@Model.ImageUrl" alt="@displayName">
+                }
+                else
+                {
+                    <div class="provider-image-placeholder booking @(isNurse ? "nurse" : "doctor")" role="img" aria-label="@displayName">
+                        <i class="fa-solid @(isNurse ? "fa-user-nurse" : "fa-user-doctor")"></i>
+                    </div>
+                }
+            </div>
+            <div>
+                <div class="booking-provider-name">@displayName</div>
+                <div class="booking-provider-spec">@Model.Specialty</div>
+                <div class="booking-provider-price">سعر الكشف @Model.Price.ToString("0") جنيه</div>
+            </div>
+        </div>
+
+        <form id="bookingForm"
+              asp-area="Guest"
+              asp-controller="RequestVisit"
+              asp-action="SubmitVisit"
+              method="post"
+              enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="ProviderId" id="bookingProviderId" value="@Model.Id" />
+            <input type="hidden" name="ProviderType" id="bookingVisitType" value="@Model.Type" />
+            <div class="double-input">
+                <div class="input-group">
+                    <label>الاسم بالكامل</label>
+                    <input type="text" name="FullName" placeholder="الاسم رباعي" required maxlength="200" />
+                </div>
+                <div class="input-group">
+                    <label>رقم الهاتف للتواصل</label>
+                    <input type="text" name="Phone" placeholder="01xxxxxxxxx" required pattern="^01[0125][0-9]{8}$" title="رقم موبايل مصري 11 رقماً" maxlength="11" />
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>العنوان بالتفصيل</label>
+                <input type="text" name="Address" placeholder="المحافظة - الحي - الشارع - رقم المبنى..." required maxlength="500" />
+            </div>
+
+            <div class="double-input">
+                <div class="input-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" name="Email" placeholder="info@gmail.com" required maxlength="256" />
+                </div>
+                <div class="input-group">
+                    <label>اختيار الموعد</label>
+                    <input type="datetime-local" name="RequestedVisitAt" id="bookingRequestedVisitAt" required />
+                </div>
+            </div>
+
+            <div class="double-input">
+                <div class="input-group file-upload">
+                    <label for="nationalIdFront" id="nationalIdFrontLabel">
+                        صورة وجه بطاقة الرقم القومي
+                    </label>
+                    <input type="file" id="nationalIdFront" name="NationalIdFront" accept="image/*" required />
+                </div>
+                <div class="input-group file-upload">
+                    <label for="nationalIdBack" id="nationalIdBackLabel">
+                        صورة ظهر بطاقة الرقم القومي
+                    </label>
+                    <input type="file" id="nationalIdBack" name="NationalIdBack" accept="image/*" required />
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>الحالة المرضية</label>
+                <input type="text" name="Condition" placeholder="اذكر الأعراض أو الحالة التي تحتاج رعاية..." required maxlength="2000" />
+            </div>
+
+            <div class="input-group">
+                <label>ملاحظات إضافية <span style="color:#aaa;font-weight:400">(اختياري)</span></label>
+                <textarea name="Notes" placeholder="أي معلومات إضافية تساعد الطبيب..." maxlength="4000"></textarea>
+            </div>
+
+            <div class="booking-form-footer">
+                <button type="submit" class="submit-btn" id="bookingSubmitBtn">
+                    طلب الآن
+                </button>
+                <a class="register-link" asp-area="Identity" asp-controller="Register" asp-action="Register">
+                    إنشاء حساب | حتي لا تحتاج لتسجيل بيانتك في المرة القادمة
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="overlay " id="successOverlay">
+    <div class="success-modal">
+        <div class="success-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h2>تم إرسال طلبك بنجاح</h2>
+        <p>طلبك مسجل الآن بحالة <strong>قيد الانتظار</strong>. سيتواصل معك أحد ممثلينا في أقرب وقت لتأكيد الزيارة.</p>
+        <button class="submit-btn" onclick="closeSuccessModal()" style="margin-top:20px; width:auto; padding:10px 40px;">
+            حسناً
+        </button>
+    </div>
+</div>

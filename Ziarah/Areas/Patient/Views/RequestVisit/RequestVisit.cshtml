@@ -1,0 +1,312 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Ziarah.Areas.Patient.Models.PatientRequestVisitViewModel
+@{
+    ViewData["Title"] = "طلب زيارة";
+
+    var specializations = Model.Specializations;
+    var providers       = Model.Providers;
+    var hasNidFront     = !string.IsNullOrWhiteSpace(Model.NationalIdFrontUrl);
+    var hasNidBack      = !string.IsNullOrWhiteSpace(Model.NationalIdBackUrl);
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Patient/requestVisit-reg.css" />
+}
+@section Scripts {
+    <script src="~/js/Patient/requestVisit-reg.js"></script>
+}
+
+<section class="visit-hero">
+    <div class="hero-illustration">
+        <img src="~/assets/image/hero-req-visit.png" alt="طلب زيارة">
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>طلب زيارة منزلية</h1>
+        <div class="line"></div>
+        <p>احصل على الرعاية الصحية في منزلك على يد نخبة من الأطباء والممرضين المتخصصين</p>
+    </div>
+</section>
+
+<main class="visit-main">
+
+    <div class="filter-section">
+        <div class="visit-type-tabs">
+            <button class="visit-type-btn active">
+                <i class="fa-solid fa-user-doctor"></i>
+                <span>طبيب</span>
+            </button>
+            <button class="visit-type-btn">
+                <i class="fa-solid fa-user-nurse"></i>
+                <span>تمريض</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="filter-section" id="filterArea">
+        <div class="filter-grid">
+            <div class="filter-item">
+                <label>الاسم</label>
+                <input type="text" id="filterName" placeholder="ابحث بالاسم...">
+            </div>
+            <div class="filter-item">
+                <label> العنوان</label>
+                <input type="text" id="filterAddress" placeholder="المنطقة أو الحي...">
+            </div>
+            <div class="filter-item" id="specFilter">
+                <label> التخصص</label>
+                <div class="custom-select-wrapper">
+                    <select id="filterSpec" class="custom-select">
+                        <option value="">كل التخصصات</option>
+                        @foreach (var spec in specializations)
+                        {
+                            <option value="@spec">@spec</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="filter-item">
+                <label>التقييم</label>
+                <div class="custom-select-wrapper">
+                    <select id="filterRating" class="custom-select">
+                        <option value="">كل التقييمات</option>
+                        <option value="5">5 نجوم فقط</option>
+                        <option value="4">4 نجوم فأكثر</option>
+                        <option value="3">3 نجوم فأكثر</option>
+                        <option value="2">2 نجوم فأكثر</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-item">
+                <label>حدد اعلي السعر</label>
+                <div class="price-range-wrap">
+                    <input type="range" id="filterPrice" min="100" max="1000" step="50" value="1000" oninput="updatePriceLabel(); applyFilters()">
+                    <span id="priceLabel">حتى 1000 جنيه</span>
+                </div>
+            </div>
+            <div class="filter-item filter-reset-wrap">
+                <button class="reset-btn">
+                    <i class="fa-solid fa-rotate-right"></i> 
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-meta">
+        <div class="results-count">
+            عرض <span id="visibleCount">0</span> من <span id="totalCount">@providers.Count</span> نتيجة
+        </div>
+    </div>
+
+    <div class="cards-grid" id="cardsGrid">
+        @foreach (var provider in providers)
+        {
+            var titlePrefix = provider.Type == "doctor" ? "د." : "أ.";
+            var displayName = $"{titlePrefix} {provider.Name}";
+            var actionLabel = provider.Type == "doctor" ? "طلب طبيب" : "طلب ممرض";
+            var ratingText = provider.Rating > 0 ? provider.Rating.ToString("0.0") : "0.0";
+            var priceText = provider.Price > 0 ? $"{provider.Price:0} جنيه" : "غير محدد";
+
+            <div class="provider-card"
+                 data-id="@provider.Id"
+                 data-type="@provider.Type"
+                 data-name="@displayName"
+                 data-spec="@provider.Spec"
+                 data-price="@provider.Price"
+                 data-rating="@provider.Rating"
+                 data-img="@provider.ImageUrl"
+                 data-has-photo="@provider.HasCustomPhoto.ToString().ToLowerInvariant()">
+                <div class="provider-img">
+                    @if (provider.HasCustomPhoto)
+                    {
+                        <img src="@provider.ImageUrl" alt="@displayName">
+                    }
+                    else
+                    {
+                        <div class="provider-avatar-fallback @(provider.Type == "doctor" ? "doctor" : "nurse")">
+                            <i class="fa-solid @(provider.Type == "doctor" ? "fa-user-doctor" : "fa-user-nurse")"></i>
+                        </div>
+                    }
+                    <span class="provider-rating-badge">
+                        <i class="fa-solid fa-star"></i> @ratingText
+                    </span>
+                </div>
+                <div class="provider-card-body">
+                    <div class="provider-name">@displayName</div>
+                    <div class="provider-spec">@provider.Spec</div>
+                    <div class="provider-price">
+                        <i class="fa-solid fa-briefcase-medical"></i>
+                        سعر الكشف: <span>@priceText</span>
+                    </div>
+                </div>
+                <div class="provider-card-footer">
+                    <button class="book-btn" onclick="openBookingModal(this)">@actionLabel</button>
+                    <a href="@provider.ProfileUrl" class="more-btn">المزيد</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="empty-state" id="emptyState">
+        <i class="fa-solid fa-user-doctor"></i>
+        <h3>لا توجد نتائج</h3>
+        <p>جرب تغيير مدخلاتك</p>
+    </div>
+    <div class="pagination-wrap" id="paginationWrap"></div>
+
+</main>
+
+
+<div class="overlay" id="bookingOverlay" onclick="closeBookingIfOutside(event)">
+    <div class="booking-modal">
+        <div class="booking-modal-header">
+            <div class="booking-modal-title">طلب زيارة</div>
+            <button class="booking-close-btn" onclick="closeBookingModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="booking-provider-info">
+            <div class="booking-provider-img">
+                <img id="bookingProviderImg" src="" alt="">
+            </div>
+            <div>
+                <div class="booking-provider-name"  id="bookingProviderName"></div>
+                <div class="booking-provider-spec"   id="bookingProviderSpec"></div>
+                <div class="booking-provider-price"  id="bookingProviderPrice"></div>
+            </div>
+        </div>
+
+        <div class="booking-source-toggle">
+            <button class="source-btn active" id="btnUseAccount"
+                    onclick="switchBookingSource('account')">
+                <i class="fa-solid fa-user-check"></i> بيانات حسابي
+            </button>
+            <button class="source-btn" id="btnUseNew"
+                    onclick="switchBookingSource('new')">
+                <i class="fa-solid fa-user-plus"></i> بيانات جديدة
+            </button>
+        </div>
+
+        <div class="booking-account-preview" id="bookingAccountPreview">
+            <div class="account-preview-row">
+                <span class="account-preview-label"><i class="fa-solid fa-user"></i> الاسم</span>
+                <span class="account-preview-value" id="previewName">@Model.FullName</span>
+            </div>
+            <div class="account-preview-row">
+                <span class="account-preview-label"><i class="fa-solid fa-phone"></i> الهاتف</span>
+                <span class="account-preview-value" id="previewPhone">@Model.Phone</span>
+            </div>
+            <div class="account-preview-row">
+                <span class="account-preview-label"><i class="fa-solid fa-envelope"></i> الإيميل</span>
+                <span class="account-preview-value" id="previewEmail">@Model.Email</span>
+            </div>
+
+
+            <div class="nid-status-row" id="nidStatusRow">
+                @if (hasNidFront && hasNidBack)
+                {
+                    <div class="account-preview-row">
+                        <span class="account-preview-label"><i class="fa-solid fa-id-card"></i>بطاقة الرقم القومي</span>
+                        <span class="account-preview-value" >محفوظة مسبقاً</span>
+                    </div>
+                    <input type="hidden" name="SavedNidFront" value="@Model.NationalIdFrontUrl">
+                    <input type="hidden" name="SavedNidBack"  value="@Model.NationalIdBackUrl">
+                }
+                else
+                {
+                    <div class="nid-upload-hint">
+                        <i class="fa-solid fa-triangle-exclamation" style="color:#e6a817;"></i>
+                        يرجى رفع صور بطاقة الرقم القومي
+                    </div>
+                }
+            </div>
+        </div>
+
+        <form id="bookingForm"
+              asp-area="Patient"
+              asp-controller="RequestVisit"
+              asp-action="SubmitVisit"
+              method="post"
+              enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="ProviderType" id="bookingVisitType"  value="doctor">
+            <input type="hidden" name="ProviderId"   id="bookingProviderId" value="0">
+            <input type="hidden" name="useAccount"   id="bookingUseAccount" value="true">
+
+            <div class="booking-new-fields" id="bookingNewFields" style="display:none;">
+                <div class="double-input">
+                    <div class="input-group">
+                        <label>الاسم بالكامل</label>
+                        <input type="text" name="FullName" placeholder="">
+                    </div>
+                    <div class="input-group">
+                        <label>رقم الهاتف للتواصل</label>
+                        <input type="text" name="Phone" placeholder="01xxxxxxxxx" pattern="^01[0125][0-9]{8}$">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>البريد الإلكتروني</span></label>
+                    <input type="email" name="Email" placeholder="info@gmail.com">
+                </div>
+            </div>
+
+            <div id="nidUploadFields"
+                 style="@(hasNidFront && hasNidBack ? "display:none;" : "")">
+                <div class="double-input">
+                    <div class="input-group file-upload">
+                        <label for="nationalIdFront" id="nationalIdFrontLabel" >
+                            <i class="fa-solid fa-upload"></i> صورة وجه بطاقة الرقم القومي
+                        </label>
+                        <input type="file" id="nationalIdFront" name="NationalIdFront"
+                               accept="image/*" @(hasNidFront && hasNidBack ? "" : "required")>
+                    </div>
+                    <div class="input-group file-upload">
+                        <label for="nationalIdBack" id="nationalIdBackLabel" >
+                            <i class="fa-solid fa-upload"></i> صورة ظهر بطاقة الرقم القومي
+                        </label>
+                        <input type="file" id="nationalIdBack" name="NationalIdBack"
+                               accept="image/*" @(hasNidFront && hasNidBack ? "" : "required")>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>العنوان بالتفصيل</label>
+                <input type="text" name="Address" placeholder="المحافظة - الحي - الشارع - رقم المبنى...">
+            </div>
+            <div class="double-input">
+                <div class="input-group">
+                    <label>اختيار الموعد</label>
+                    <input type="datetime-local" name="RequestedVisitAt"
+                           id="bookingRequestedVisitAt" required>
+                </div>
+                <div class="input-group">
+                    <label>الحالة المرضية</label>
+                    <input type="text" name="Condition" placeholder="اذكر الأعراض..." required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>ملاحظات إضافية <span class="optional-label">(اختياري)</span></label>
+                <textarea name="Notes" placeholder="أي معلومات إضافية تساعد الطبيب..."></textarea>
+            </div>
+
+            <div class="booking-form-footer">
+                <button type="submit" class="submit-btn" id="bookingSubmitBtn">طلب الآن</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="overlay" id="successOverlay">
+    <div class="success-modal">
+        <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+        <h2>تم إرسال طلبك بنجاح</h2>
+        <p>سيتواصل معك أحد ممثلينا في أقرب وقت لتأكيد الزيارة</p>
+        <button onclick="closeSuccessModal()">حسناً</button>
+    </div>
+</div>
+

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Ziarah.Models;
@@ -12,6 +12,8 @@ public partial class Doctor
     public int SpecializationId { get; set; }
 
     public string? Bio { get; set; }
+
+    public string ProfessionalLicenseImage { get; set; } = null!;
 
     public decimal ConsultationPrice { get; set; }
 

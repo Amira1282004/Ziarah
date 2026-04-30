@@ -13,6 +13,8 @@ public partial class Pharmacy
 
     public string Location { get; set; } = null!;
 
+    public string? ImageUrl { get; set; }
+
     public bool Open24Hours { get; set; }
 
     public bool DeliveryAvailable { get; set; }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Ziarah.Models;
@@ -7,15 +7,11 @@ public partial class Nurse
 {
     public int Id { get; set; }
 
-    public string FirstName { get; set; } = null!;
-
-    public string LastName { get; set; } = null!;
-
-    public string? Photo { get; set; }
+    public string ProfessionalLicenseImage { get; set; } = null!;
 
     public int? HomeCareServiceId { get; set; }
 
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
 
     public bool IsDeleted { get; set; }
 
@@ -29,5 +25,5 @@ public partial class Nurse
 
     public virtual User CreatedByNavigation { get; set; } = null!;
 
-    public virtual User? User { get; set; }
+    public virtual User User { get; set; } = null!;
 }

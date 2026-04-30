@@ -1,0 +1,155 @@
+@model IEnumerable<Ziarah.Areas.Guest.Models.InsuranceProviderViewModel>
+
+@{
+    ViewData["Title"] = "التامين";
+    var providers = Model?.ToList() ?? new List<Ziarah.Areas.Guest.Models.InsuranceProviderViewModel>();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Guest/insurance.css" />
+}
+
+@section Scripts {
+    <script src="~/js/Guest/insurance.js"></script>
+}
+
+<section class="insurance-hero">
+    <div class="hero-illustration">
+        <div class="hero-icons">
+            <div class="hero-icons-column">
+                <i class="hero-icon-big fa-solid fa-hospital"></i>
+                <i class="hero-icon-big fa-solid fa-vials"></i>
+            </div>
+            <div class="hero-icons-row">
+                <i class="hero-icon-big fa-solid fa-pills"></i>
+                <i class="hero-icon-big fa-solid fa-x-ray"></i>
+            </div>
+        </div>
+    </div>
+    <div class="hero-content">
+        <h1>التأمين الطبي لاعضاء هيئة التدريس</h1>
+        <div class="line"></div>
+        <p>اعرف المستشفيات والصيدليات والصيدليات ومراكز الاشعة والمعامل التابعة لتأمينك الطبي 
+        </p>
+        <div class="hero-badge-row">
+            <div class="hero-badge"><i class="fa-solid fa-hospital"></i> مستشفيات</div>
+            <div class="hero-badge"><i class="fa-solid fa-pills"></i> صيدليات</div>
+            <div class="hero-badge"><i class="fa-solid fa-x-ray"></i> مراكز أشعة</div>
+            <div class="hero-badge"><i class="fa-solid fa-vials"></i> معامل تحاليل</div>
+        </div>
+    </div>
+</section>
+
+<main class="insurance-main">
+    <div class="filter-section">
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-type="all" onclick="filterCards('all', this)">
+                <i class="fa-solid fa-border-all"></i> الكل
+            </button>
+            <button class="filter-tab" data-type="hospital" onclick="filterCards('hospital', this)">
+                <i class="fa-solid fa-hospital"></i> مستشفيات
+            </button>
+            <button class="filter-tab" data-type="pharmacy" onclick="filterCards('pharmacy', this)">
+                <i class="fa-solid fa-pills"></i> صيدليات
+            </button>
+            <button class="filter-tab" data-type="radiology" onclick="filterCards('radiology', this)">
+                <i class="fa-solid fa-x-ray"></i> مراكز أشعة
+            </button>
+            <button class="filter-tab" data-type="lab" onclick="filterCards('lab', this)">
+                <i class="fa-solid fa-vials"></i> معامل تحاليل
+            </button>
+        </div>
+    </div>
+
+    <div class="search-section">
+        <div class="search-input-wrap">
+            <input type="text" id="insSearchInput" placeholder="ابحث بالاسم أو المنطقة..." oninput="searchCards(this.value)">
+        </div>
+        <button class="map-btn" onclick="openMapModal()">
+            <i class="fa-solid fa-map-location-dot"></i>
+            الخريطة
+        </button>
+    </div>
+
+    <div class="results-meta">
+        <div class="results-count">عرض <span id="visibleCount">0</span> من <span id="totalCount">@providers.Count</span> نتيجة</div>
+    </div>
+
+    <div class="cards-grid" id="cardsGrid">
+        @for (var i = 0; i < providers.Count; i++)
+        {
+            var item = providers[i];
+            var fallbackPhone = string.IsNullOrWhiteSpace(item.Phone) ? "غير متاح" : item.Phone;
+            var addressParts = new[] { item.Address, item.Area, item.Governorate }
+                .Where(part => !string.IsNullOrWhiteSpace(part))
+                .ToList();
+            <div class="ins-card" data-type="@item.TypeKey" data-id="@(i + 1)" data-phone="@item.PhoneDial" data-lat="0" data-lng="0">
+                <div class="card-right">
+                    <div class="card-body">
+                        <div class="card-name">@item.Name</div>
+                        <div class="card-address">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>@string.Join(" - ", addressParts)</span>
+                        </div>
+                        <div class="card-depts">
+                            <span class="dept-tag">@item.Specialization</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        @if (!string.IsNullOrWhiteSpace(item.PhoneDial))
+                        {
+                            <a class="call-now-btn" href="tel:@item.PhoneDial">
+                                <i class="fa-solid fa-phone"></i>
+                                اتصل الآن
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="call-now-btn">اتصل الآن</span>
+                        }
+                    </div>
+                </div>
+                <div class="card-img-wrap">
+                    <img src="@item.ImageUrl" alt="@item.Name">
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="empty-state" id="emptyState">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <h3>لا توجد نتائج</h3>
+        <p>جرب تغيير كلمة البحث أو نوع التصفية</p>
+    </div>
+
+    <div class="pagination-wrap" id="paginationWrap"></div>
+</main>
+
+<div class="map-overlay" id="mapModal" onclick="closeMapIfOutside(event)">
+    <div class="map-modal">
+        <div class="map-modal-header">
+            <div class="map-modal-title">
+                <i class="fa-solid fa-map-location-dot"></i>
+                مواقع المنشات الطبية المشاركة
+            </div>
+            <button class="map-close-btn" onclick="closeMapModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="map-filter-bar">
+            <button class="map-filter-btn active" onclick="filterMap('all', this)">الكل</button>
+            <button class="map-filter-btn" onclick="filterMap('hospital', this)"><i class="fa-solid fa-hospital"></i> مستشفيات</button>
+            <button class="map-filter-btn" onclick="filterMap('pharmacy', this)"><i class="fa-solid fa-pills"></i> صيدليات</button>
+            <button class="map-filter-btn" onclick="filterMap('radiology', this)"><i class="fa-solid fa-x-ray"></i> أشعة</button>
+            <button class="map-filter-btn" onclick="filterMap('lab', this)"><i class="fa-solid fa-vials"></i> معامل</button>
+        </div>
+
+        <iframe id="mapFrame"
+                class="map-frame"
+                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d110502.76917651614!2d31.235715!3d30.044420!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sar!2seg!4v1715000000000"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+</div>

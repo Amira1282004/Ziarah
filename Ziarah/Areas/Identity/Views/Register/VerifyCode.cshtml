@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "تأكيد الحساب";
+    var masked = ViewBag.MaskedEmail as string ?? "***";
+    var expiresMs = ViewBag.CodeExpiresMs as long? ?? 0L;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Auth/verifyCode.css" />
+}
+@section Scripts {
+    <script src="~/js/Auth/verifyCode.js"></script>
+}
+
+<div class="verify-box" id="verifyPageRoot" data-expires-ms="@expiresMs">
+    <div class="verify">
+        <div class="verify-header">
+            <h2 class="form-title">أدخل كود التأكيد</h2>
+            <p class="form-subtitle">تم إرسال كود مكون من 4 أرقام إلى <strong>@masked</strong></p>
+        </div>
+    </div>
+
+    <div class="verify-form-wrapper">
+        @if (TempData["VerifyMessage"] is string tm && !string.IsNullOrWhiteSpace(tm))
+        {
+            <div class="verify-info-msg">@tm</div>
+        }
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div asp-validation-summary="All" class="error-msg" style="display:block;"></div>
+        }
+
+        <form method="post" asp-area="Identity" asp-controller="Register" asp-action="VerifyCode" id="verifyForm">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="code" id="codeHidden" />
+
+            <div class="code-inputs" id="codeInputs">
+                <input type="text" class="code-box" maxlength="1" inputmode="numeric" autocomplete="one-time-code" />
+                <input type="text" class="code-box" maxlength="1" inputmode="numeric" autocomplete="one-time-code" />
+                <input type="text" class="code-box" maxlength="1" inputmode="numeric" autocomplete="one-time-code" />
+                <input type="text" class="code-box" maxlength="1" inputmode="numeric" autocomplete="one-time-code" />
+            </div>
+
+            <div class="timer-wrapper">
+                <span>صلاحية الكود حتى: <strong id="timer">--:--</strong></span>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">تأكيد الكود</button>
+        </form>
+
+        <form method="post" asp-area="Identity" asp-controller="Register" asp-action="ResendCode" class="resend-form">
+            @Html.AntiForgeryToken()
+            <div class="resend-wrapper">
+                <span>لم يصلك الكود؟</span>
+                <button type="submit" class="resend-btn" id="resendBtn">إعادة الإرسال</button>
+            </div>
+        </form>
+
+        <div class="login-link">
+            <a asp-area="Identity" asp-controller="Register" asp-action="Register">العودة لصفحة التسجيل</a>
+        </div>
+    </div>
+</div>

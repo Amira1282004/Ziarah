@@ -1,0 +1,180 @@
+﻿@{
+    ViewData["Title"] = "إنشاء حساب";
+    var specs = ViewBag.Specializations as IEnumerable<dynamic>;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Auth/register.css" />
+}
+@section Scripts {
+    <script src="~/js/Auth/register.js"></script>
+}
+@{
+    var modelErrors = ViewData.ModelState.Values
+        .SelectMany(v => v.Errors)
+        .Select(e => e.ErrorMessage)
+        .Where(m => !string.IsNullOrWhiteSpace(m))
+        .ToList();
+}
+
+<div id="errorPopupOverlay" class="popup-overlay @(modelErrors.Any() ? "active" : "")">
+    <div class="popup-card popup-error">
+        <div class="popup-icon-ring">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h3 class="popup-title">تعذر إتمام التسجيل</h3>
+        <ul class="popup-error-list">
+            @foreach (var err in modelErrors)
+            {
+                <li><i class="fa-solid fa-circle-dot"></i> @err</li>
+            }
+        </ul>
+        <button class="popup-close-btn" onclick="closeErrorPopup()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+    function closeErrorPopup() {
+        document.getElementById('errorPopupOverlay').classList.remove('active');
+    }
+    document.getElementById('errorPopupOverlay')?.addEventListener('click', function (e) {
+        if (e.target === this) closeErrorPopup();
+    });
+</script>
+
+<div class="register-box">
+    <div class="info">
+        <div class="point">
+            <h3>التسجيل كمستخدم (مريض)</h3>
+            <p>طلب زيارات منزلية ومتابعة تأمين أعضاء هيئة التدريس وميزات أخرى.</p>
+        </div>
+        <div class="point">
+            <h3>التسجيل كطبيب</h3>
+            <p>تقديم زيارات منزلية للمرضى ضمن تخصصك.</p>
+        </div>
+        <div class="point">
+            <h3>التسجيل كممرض</h3>
+            <p>تقديم رعاية تمريضية منزلية للمرضى.</p>
+        </div>
+    </div>
+
+    <form asp-area="Identity" asp-controller="Register" asp-action="Register" method="post" enctype="multipart/form-data" id="registerForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="role" id="RoleInput" value="patient" />
+
+        <div id="formAlert" class="form-alert" style="display:none;"></div>
+
+        <div class="role-buttons">
+            <button type="button" class="role-btn active" data-role="patient">مستخدم (مريض)</button>
+            <button type="button" class="role-btn" data-role="doctor">طبيب</button>
+            <button type="button" class="role-btn" data-role="nurse">ممرض</button>
+        </div>
+
+        <div class="double-input" id="separateNameFields">
+            <div class="input-group">
+                <label for="firstName">الاسم الأول</label>
+                <input type="text" id="firstName" name="firstName" required maxlength="100" />
+            </div>
+            <div class="input-group">
+                <label for="lastName">الاسم الأخير</label>
+                <input type="text" id="lastName" name="lastName" required maxlength="100" />
+            </div>
+        </div>
+
+        <div class="double-input">
+            <div class="input-group">
+                <label for="phone">رقم الهاتف</label>
+                <input type="text" id="phone" name="phone" placeholder="01xxxxxxxxx" required pattern="^01[0125][0-9]{8}$" title="رقم موبايل مصري 11 رقماً" maxlength="11" />
+            </div>
+            <div class="input-group">
+                <label for="email">البريد الإلكتروني</label>
+                <input type="email" id="email" name="email" placeholder="info@gmail.com" required maxlength="256" />
+            </div>
+        </div>
+
+        <div class="input-group password-group">
+            <label for="password">كلمة المرور</label>
+            <div class="password-wrapper">
+                <input type="password" id="password" name="password" placeholder="8 أحرف: كبير وصغير ورقم ورمز !@@#$%^&*" required minlength="8" maxlength="128" />
+                <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
+            </div>
+        </div>
+
+        <div class="input-group" id="specializationField" style="display:none;">
+            <label for="specializationId">التخصص</label>
+            <div class="custom-select-wrapper">
+                <select name="specializationId" id="specializationId" class="custom-select">
+                    <option value="">اختر التخصص</option>
+                    @if (specs is not null)
+                    {
+                        foreach (var s in specs)
+                        {
+                            <option value="@s.Id">@s.Name</option>
+                        }
+                    }
+                </select>
+                <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+            </div>
+        </div>
+
+        <div class="double-input" id="doctorPricingRow" style="display:none;">
+            <div class="input-group">
+                <label for="consultationPrice">سعر الكشف (جنيه)</label>
+                <input type="number" id="consultationPrice" name="consultationPrice" min="1" max="100000" step="1" />
+            </div>
+            <div class="input-group">
+                <label for="experienceYears">سنوات الخبرة</label>
+                <input type="number" id="experienceYears" name="experienceYears" min="0" max="60" step="1" />
+            </div>
+        </div>
+
+
+        <div class="double-input" >        
+            <div class="input-group file-upload" id="nationalIdFrontWrap">
+                <label for="nationalIdFront" id="nationalIdFrontLabel">صورة وجه بطاقة الرقم القومي</label>
+                <input type="file" id="nationalIdFront" name="nationalIdFront" accept="image/*" required />
+            </div>
+            <div class="input-group file-upload" id="nationalIdBackWrap">
+                <label for="nationalIdBack" id="nationalIdBackLabel">صورة ظهر بطاقة الرقم القومي</label>
+                <input type="file" id="nationalIdBack" name="nationalIdBack" accept="image/*" required />
+            </div>            
+        </div>
+
+
+        <div class="input-group file-upload" id="certificateField" style="display:none;">
+            <label for="professionalLicense" id="certificateLabel">شهادة مزاولة المهنة (طب / تمريض)</label>
+            <input type="file" id="professionalLicense" name="professionalLicense" accept="image/*" />
+        </div>
+
+        <div class="input-group" id="insuranceField">
+            <label class="custom-checkbox">
+                <input type="checkbox" id="hasInsurance" name="hasInsurance" value="true" />
+                <span class="checkmark"></span>
+                هل لديك تأمين أعضاء هيئة التدريس؟
+            </label>
+            <div class="input-group file-upload" id="insuranceUpload" style="display:none;">
+                <label for="insuranceDoc" id="insuranceLabel">ارفع صورة الكارنيه</label>
+                <input type="file" id="insuranceDoc" name="insuranceDoc" accept="image/*" />
+            </div>
+        </div>
+
+        <div class="btns-form">
+            <button type="submit" class="submit-btn">تسجيل الحساب</button>
+        </div>
+
+        <div class="terms-box">
+            <label class="custom-checkbox terms-check">
+                <input type="checkbox" id="acceptTerms" />
+                <span class="checkmark"></span>
+                أوافق على
+                <a href="#">سياسة الخصوصية</a>
+                و
+                <a href="#">شروط الاستخدام</a>
+            </label>
+        </div>
+        <div class="login-link">
+            <a asp-area="Identity" asp-controller="Login" asp-action="Login">لدي حساب بالفعل؟</a>
+        </div>
+    </form>
+</div>

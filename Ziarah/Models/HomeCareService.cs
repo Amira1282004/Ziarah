@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Ziarah.Models;
 
 public partial class HomeCareService
 {
+    internal DateTime UpdatedOn;
+
     public int Id { get; set; }
 
     public int? ServiceRequestId { get; set; }
@@ -13,11 +15,31 @@ public partial class HomeCareService
 
     public string ServiceLocation { get; set; } = null!;
 
-    public int? HospitalId { get; set; }
-
     public int? PatientId { get; set; }
 
     public int Status { get; set; }
+
+    /// <summary>نوع مقدم الخدمة المطلوب: doctor أو nurse (مع <see cref="ProviderId"/>).</summary>
+    public string? ProviderType { get; set; }
+
+    /// <summary>معرف الطبيب في Doctors أو الممرض في Nurses حسب <see cref="ProviderType"/>.</summary>
+    public int? ProviderId { get; set; }
+
+    public string? RequesterFullName { get; set; }
+
+    public string? RequesterPhone { get; set; }
+
+    public string? RequesterEmail { get; set; }
+
+    public DateTime? RequestedVisitAt { get; set; }
+
+    public string? NationalIdFrontImage { get; set; }
+
+    public string? NationalIdBackImage { get; set; }
+
+    public string? MedicalCondition { get; set; }
+
+    public string? AdditionalNotes { get; set; }
 
     public bool IsDeleted { get; set; }
 

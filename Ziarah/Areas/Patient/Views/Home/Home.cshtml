@@ -1,0 +1,474 @@
+﻿@model Ziarah.Areas.Patient.Models.PatientHomeViewModel
+@{
+    ViewData["Title"]       = "الصفحة الرئيسية";
+    ViewData["LayoutModel"] = Model;   
+
+    var requestVisitUrl = Url.Action("RequestVisit", "RequestVisit", new { area = "Patient" });
+    var hasAddress      = !string.IsNullOrWhiteSpace(Model.Address);
+    var hasNidFront     = !string.IsNullOrWhiteSpace(Model.NationalIdFrontUrl);
+    var hasNidBack      = !string.IsNullOrWhiteSpace(Model.NationalIdBackUrl);
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Patient/patientHome.css" />
+}
+@section Scripts {
+    <script>
+        window.CURRENT_USER = @Html.Raw(ViewBag.CurrentUser ?? "{}");
+    </script>
+    <script src="~/js/Patient/patientHome.js"></script>
+}
+
+@if (TempData["AccountCreatedSuccess"] is string successMsg && !string.IsNullOrWhiteSpace(successMsg))
+{
+    <div class="account-success-banner">
+        <i class="fa-solid fa-circle-check"></i> @successMsg
+    </div>
+}
+
+
+<section class="welcome-section">
+    <div class="hero-illustration">
+        <img src="~/assets/image/b3b3faed5a578a21a8fcec059f989ca0964f6737.png" alt="طلب زيارة">
+    </div>
+    <div class="welcome-bg-circles"><span></span><span></span><span></span></div>
+    <div class="welcome-inner">
+        <div class="welcome-text">
+            <p class="welcome-greeting">مرحباً بعودتك</p>
+            <h1>أهلاً <span id="userNameHero">@Model.FirstName</span>، كيف حالك اليوم؟</h1>
+            <p class="welcome-sub">رعايتك الصحية أولويتنا — اطلب زيارة منزلية أو تصفح أفضل الأطباء المتاحين الآن</p>
+            <div class="welcome-btns">
+                <a asp-area="Patient" asp-controller="RequestVisit" asp-action="RequestVisit" class="w-btn-primary">
+                    اطلب زيارة الآن <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <button class="w-btn-outline" onclick="openEmergency()">
+                    <i class="fa-solid fa-triangle-exclamation"></i> طوارئ
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="emergency-overlay" id="emergencyModal">
+    <div class="emergency-modal">
+        <span class="close" onclick="closeEmergency()"><i class="fa-solid fa-xmark"></i></span>
+        <div class="emergency-icon"><i class="fa-solid fa-phone"></i></div>
+        <h2>رقم الطوارئ</h2>
+        <p class="emergency-number">123</p>
+        <a href="tel:123" class="call-btn">اتصل الآن</a>
+    </div>
+</div>
+
+
+<section class="symptoms-section">
+    <div class="section-header">
+        <div>
+            <h2>مما تعاني؟</h2>
+            <div class="section-line"></div>
+        </div>
+        <p class="section-sub">اختر التخصص المناسب لحالتك وسنوصلك بأفضل طبيب</p>
+    </div>
+    <div class="symptoms-grid">
+        @{
+            var symptoms = new[]
+            {
+                ("fa-head-side-cough",      "حمى وبرد",       "باطنة"),
+                ("fa-bone",                 "آلام العظام",     "عظام ومفاصل"),
+                ("fa-heart-pulse",          "القلب والضغط",   "قلب وأوعية دموية"),
+                ("fa-brain",                "مخ وأعصاب",      "مخ وأعصاب"),
+                ("fa-child-reaching",       "أمراض الأطفال",  "أطفال"),
+                ("fa-venus",                "نساء وتوليد",    "نساء وتوليد"),
+                ("fa-lungs",                "الجهاز التنفسي", "صدر وجهاز تنفسي"),
+                ("fa-person-dots-from-line","الجلدية",        "جلدية"),
+                ("fa-syringe",              "السكري والغدد",  "الغدد الصماء والسكري"),
+                ("fa-ellipsis",             "المزيد",         ""),
+            };
+        }
+        @foreach (var (icon, label, spec) in symptoms)
+        {
+            var href = string.IsNullOrEmpty(spec)
+                ? requestVisitUrl
+                : $"{requestVisitUrl}?spec={Uri.EscapeDataString(spec)}";
+            <a href="@href" class="symptom-card">
+                <div class="symptom-icon"><i class="fa-solid @icon"></i></div>
+                <span>@label</span>
+            </a>
+        }
+    </div>
+</section>
+
+
+<section class="providers-section section-doctors">
+    <div class="section-header">
+        <div>
+            <h2>أعلى الأطباء تقييماً</h2>
+            <div class="section-line line-w"></div>
+        </div>
+        <a asp-area="Patient" asp-controller="RequestVisit" asp-action="RequestVisit"
+           class="see-all-link">عرض الكل <i class="fa-solid fa-arrow-left"></i></a>
+    </div>
+    <div class="providers-scroll">
+        @if (Model.TopDoctors.Any())
+        {
+            foreach (var doc in Model.TopDoctors)
+            {
+                <div class="provider-card"
+                     data-type="doctor" data-id="@doc.Id"
+                     data-name="@doc.Name" data-spec="@doc.Spec"
+                     data-price="@doc.Price" data-img="@(doc.ImageUrl ?? "")"
+                     data-has-photo="@(!string.IsNullOrWhiteSpace(doc.ImageUrl) ? "true" : "false")"
+                     onclick="window.location.href='@doc.ProfileUrl'">
+                    <div class="provider-img">
+                        @if (!string.IsNullOrWhiteSpace(doc.ImageUrl))
+                        {
+                            <img src="@doc.ImageUrl" alt="@doc.Name">
+                        }
+                        else
+                        {
+                            <div class="provider-avatar-fallback doctor">
+                                <i class="fa-solid fa-user-doctor"></i>
+                            </div>
+                        }
+
+                        @if (doc.Rating > 0)
+                        {
+                            <span class="provider-rating">
+                                <i class="fa-solid fa-star"></i> @doc.Rating.ToString("0.0")
+                            </span>
+                        }
+                    </div>
+                    <div class="provider-info">
+                        <p class="provider-name">@doc.Name</p>
+                        <p class="provider-spec">@doc.Spec</p>
+                        <p class="provider-price"><i class="fa-solid fa-briefcase-medical"></i> @doc.Price جنيه</p>
+                    </div>
+                    <button class="provider-book-btn"
+                            onclick="event.stopPropagation(); openBookingModal(this)">
+                        طلب زيارة الآن
+                    </button>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="no-providers-msg"><i class="fa-solid fa-user-doctor"></i> لا يوجد أطباء متاحون حالياً</p>
+        }
+    </div>
+</section>
+
+
+<section class="providers-section section-nurse">
+    <div class="section-header">
+        <div>
+            <h2>أعلى الممرضين تقييماً</h2>
+            <div class="section-line line-w"></div>
+        </div>
+        <a asp-area="Patient" asp-controller="RequestVisit" asp-action="RequestVisit"
+           class="see-all-link">عرض الكل <i class="fa-solid fa-arrow-left"></i></a>
+    </div>
+    <div class="providers-scroll">
+        @if (Model.TopNurses.Any())
+        {
+            foreach (var nurse in Model.TopNurses)
+            {
+                <div class="provider-card nurse-card"
+                     data-type="nurse" data-id="@nurse.Id"
+                     data-name="@nurse.Name" data-spec="تمريض منزلي"
+                     data-price="0" data-img="@(nurse.ImageUrl ?? "")"
+                     data-has-photo="@(!string.IsNullOrWhiteSpace(nurse.ImageUrl) ? "true" : "false")"
+                     onclick="window.location.href='@nurse.ProfileUrl'">
+                    <div class="provider-img">
+                        @if (!string.IsNullOrWhiteSpace(nurse.ImageUrl))
+                        {
+                            <img src="@nurse.ImageUrl" alt="@nurse.Name">
+                        }
+                        else
+                        {
+                            <div class="provider-avatar-fallback nurse">
+                                <i class="fa-solid fa-user-nurse"></i>
+                            </div>
+                        }
+                        @if (nurse.Rating > 0)
+                        {
+                            <span class="provider-rating">
+                                <i class="fa-solid fa-star"></i> @nurse.Rating.ToString("0.0")
+                            </span>
+                        }
+                    </div>
+                    <div class="provider-info">
+                        <p class="provider-name">@nurse.Name</p>
+                        <p class="provider-spec">تمريض منزلي</p>
+                    </div>
+                    <button class="provider-book-btn"
+                            onclick="event.stopPropagation(); openBookingModal(this)">
+                        طلب زيارة الآن
+                    </button>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="no-providers-msg"><i class="fa-solid fa-user-nurse"></i> لا يوجد ممرضون متاحون حالياً</p>
+        }
+    </div>
+</section>
+
+
+@if (Model.HasInsurance)
+{
+    <section class="insurance-section">
+        <div class="insurance-section-inner">
+            <div class="insurance-text">
+                <h2>تأمينك</h2>
+                <div class="section-line line-color"></div>
+                <p>ابحث عن المستشفيات والصيدليات ومراكز الأشعة والمعامل التابعة لتأمينك الطبي بسهولة</p>
+                <div class="insurance-types">
+                    <div class="ins-type-chip"><i class="fa-solid fa-hospital"></i> مستشفيات</div>
+                    <div class="ins-type-chip"><i class="fa-solid fa-pills"></i> صيدليات</div>
+                    <div class="ins-type-chip"><i class="fa-solid fa-x-ray"></i> مراكز أشعة</div>
+                    <div class="ins-type-chip"><i class="fa-solid fa-microscope"></i> معامل تحاليل</div>
+                </div>
+                <a asp-area="Patient" asp-controller="Insurance" asp-action="Insurance" class="ins-go-btn">
+                    ابحث الآن
+                </a>
+            </div>
+            <div class="insurance-img">
+                <img src="~/assets/image/vecteezy_hospital-building-with-ambulance-isolated-on-a-transparent_51338414.png"
+                     alt="مستشفيات">
+            </div>
+        </div>
+    </section>
+}
+
+
+<div class="overlay" id="bookingOverlay" onclick="closeBookingIfOutside(event)">
+    <div class="booking-modal">
+        <div class="booking-modal-header">
+            <div class="booking-modal-title">طلب زيارة</div>
+            <button class="booking-close-btn" onclick="closeBookingModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="booking-provider-info">
+            <div class="booking-provider-img">
+                <img id="bookingProviderImg" src="" alt="">
+            </div>
+            <div>
+                <div class="booking-provider-name"  id="bookingProviderName"></div>
+                <div class="booking-provider-spec"   id="bookingProviderSpec"></div>
+                <div class="booking-provider-price"  id="bookingProviderPrice"></div>
+            </div>
+        </div>
+
+        <div class="booking-source-toggle">
+            <button class="source-btn active" id="btnUseAccount"
+                    onclick="switchBookingSource('account')">
+                <i class="fa-solid fa-user-check"></i> بيانات حسابي
+            </button>
+            <button class="source-btn" id="btnUseNew"
+                    onclick="switchBookingSource('new')">
+                <i class="fa-solid fa-user-plus"></i> بيانات جديدة
+            </button>
+        </div>
+
+        <div class="booking-account-preview" id="bookingAccountPreview">
+            <div class="account-preview-row">
+                <span class="account-preview-label"><i class="fa-solid fa-user"></i> الاسم</span>
+                <span class="account-preview-value" id="previewName">@Model.FullName</span>
+            </div>
+            <div class="account-preview-row">
+                <span class="account-preview-label"><i class="fa-solid fa-phone"></i> الهاتف</span>
+                <span class="account-preview-value" id="previewPhone">@Model.Phone</span>
+            </div>
+            <div class="account-preview-row">
+                <span class="account-preview-label"><i class="fa-solid fa-envelope"></i> الإيميل</span>
+                <span class="account-preview-value" id="previewEmail">@Model.Email</span>
+            </div>
+
+
+            <div class="nid-status-row" id="nidStatusRow">
+                @if (hasNidFront && hasNidBack)
+                {
+                    <div class="account-preview-row">
+                        <span class="account-preview-label"><i class="fa-solid fa-id-card"></i>بطاقة الرقم القومي</span>
+                        <span class="account-preview-value" >محفوظة مسبقاً</span>
+                    </div>
+                    <input type="hidden" name="SavedNidFront" value="@Model.NationalIdFrontUrl">
+                    <input type="hidden" name="SavedNidBack"  value="@Model.NationalIdBackUrl">
+                }
+                else
+                {
+                    <div class="nid-upload-hint">
+                        <i class="fa-solid fa-triangle-exclamation" style="color:#e6a817;"></i>
+                        يرجى رفع صور بطاقة الرقم القومي
+                    </div>
+                }
+            </div>
+        </div>
+
+        <form id="bookingForm"
+              asp-area="Patient"
+              asp-controller="RequestVisit"
+              asp-action="SubmitVisit"
+              method="post"
+              enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="ProviderType" id="bookingVisitType"  value="doctor">
+            <input type="hidden" name="ProviderId"   id="bookingProviderId" value="0">
+            <input type="hidden" name="useAccount"   id="bookingUseAccount" value="true">
+
+            <div class="booking-new-fields" id="bookingNewFields" style="display:none;">
+                <div class="double-input">
+                    <div class="input-group">
+                        <label>الاسم بالكامل</label>
+                        <input type="text" name="FullName" placeholder="">
+                    </div>
+                    <div class="input-group">
+                        <label>رقم الهاتف</label>
+                        <input type="text" name="Phone" placeholder="01xxxxxxxxx" pattern="^01[0125][0-9]{8}$">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" name="Email" placeholder="info@gmail.com">
+                </div>
+            </div>
+
+            <div id="nidUploadFields"
+                 style="@(hasNidFront && hasNidBack ? "display:none;" : "")">
+                <div class="double-input">
+                    <div class="input-group file-upload">
+                        <label for="nationalIdFront" id="nationalIdFrontLabel" >
+                            <i class="fa-solid fa-upload"></i> صورة وجه بطاقة الرقم القومي
+                        </label>
+                        <input type="file" id="nationalIdFront" name="NationalIdFront"
+                               accept="image/*" @(hasNidFront && hasNidBack ? "" : "required")>
+                    </div>
+                    <div class="input-group file-upload">
+                        <label for="nationalIdBack" id="nationalIdBackLabel" >
+                            <i class="fa-solid fa-upload"></i> صورة ظهر بطاقة الرقم القومي
+                        </label>
+                        <input type="file" id="nationalIdBack" name="NationalIdBack"
+                               accept="image/*" @(hasNidFront && hasNidBack ? "" : "required")>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>العنوان بالتفصيل</label>
+                <input type="text" name="Address" placeholder="المحافظة - الحي - الشارع - رقم المبنى...">
+            </div>
+            <div class="double-input">
+                <div class="input-group">
+                    <label>اختيار الموعد</label>
+                    <input type="datetime-local" name="RequestedVisitAt"
+                           id="bookingRequestedVisitAt" required>
+                </div>
+                <div class="input-group">
+                    <label>الحالة المرضية</label>
+                    <input type="text" name="Condition" placeholder="اذكر الأعراض..." required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>ملاحظات إضافية <span class="optional-label">(اختياري)</span></label>
+                <textarea name="Notes" placeholder="أي معلومات إضافية تساعد الطبيب..."></textarea>
+            </div>
+
+            <div class="booking-form-footer">
+                <button type="submit" class="submit-btn" id="bookingSubmitBtn">طلب الآن</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="overlay" id="successOverlay">
+    <div class="success-modal">
+        <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+        <h2>تم إرسال طلبك بنجاح</h2>
+        <p>سيتواصل معك أحد ممثلينا في أقرب وقت لتأكيد الزيارة</p>
+        <button onclick="closeSuccessModal()">حسناً</button>
+    </div>
+</div>
+
+
+<section class="visit-history-section" id="visitHistorySection" style="display:none;">
+    <div class="visit-history-inner">
+        <div class="vh-header">
+            <div>
+                <h2><i class="fa-solid fa-clock-rotate-left"></i> سجل زياراتي</h2>
+                <div class="section-line"></div>
+            </div>
+            <button class="vh-back-btn" onclick="hideVisitHistory()">
+                <i class="fa-solid fa-arrow-right"></i> العودة للرئيسية
+            </button>
+        </div>
+
+        <div class="vh-filters">
+            <button class="vh-filter-btn active" onclick="filterVisits('all', this)">الكل</button>
+            <button class="vh-filter-btn" onclick="filterVisits('confirmed', this)">مؤكدة</button>
+            <button class="vh-filter-btn" onclick="filterVisits('pending', this)">قيد الانتظار</button>
+            <button class="vh-filter-btn" onclick="filterVisits('completed', this)">منتهية</button>
+            <button class="vh-filter-btn" onclick="filterVisits('cancelled', this)">ملغاة</button>
+        </div>
+
+        <div class="vh-list" id="vhList">
+            @if (Model.VisitHistory.Any())
+            {
+                foreach (var v in Model.VisitHistory)
+                {
+                    <div class="vh-card" data-visit-id="@v.Id" data-status="@v.Status">
+                        <div class="vh-card-img">
+                            @if (!string.IsNullOrWhiteSpace(v.ProviderPhoto))
+                            {
+                                <img src="@v.ProviderPhoto" alt="@v.ProviderName">
+                            }
+                            else
+                            {
+                                <div class="provider-avatar-fallback doctor"
+                                     style="width:56px;height:56px;font-size:22px;">
+                                    <i class="fa-solid fa-user-doctor"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="vh-card-info">
+                            <div class="vh-card-name">@v.ProviderName</div>
+                            <div class="vh-card-meta">
+                                <span>@v.ProviderSpec</span>
+                                <span><i class="fa-solid fa-calendar"></i> @v.RequestedAt.ToString("yyyy-MM-dd")</span>
+                                <span><i class="fa-solid fa-clock"></i> @v.RequestedAt.ToString("hh:mm tt")</span>
+                                <span><i class="fa-solid fa-location-dot"></i> @v.Address</span>
+                                @if (v.Price > 0)
+                                {
+                                    <span><i class="fa-solid fa-briefcase-medical"></i> @v.Price جنيه</span>
+                                }
+                            </div>
+                        </div>
+                        <span class="vh-card-status vh-status-@v.Status">@v.StatusLabel</span>
+                        <div class="vh-card-actions">
+                            @if (v.Status is "pending" or "confirmed")
+                            {
+                                <button class="vh-action-btn cancel-btn" onclick="cancelVisit(this)">
+                                    <i class="fa-solid fa-xmark"></i> إلغاء
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="vh-action-btn" onclick="rebookVisit(this)">
+                                    <i class="fa-solid fa-rotate-right"></i> إعادة الحجز
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="vh-empty" id="vhEmpty"
+             style="@(Model.VisitHistory.Any() ? "display:none;" : "")">
+            <i class="fa-solid fa-calendar-xmark"></i>
+            <p>لا توجد زيارات بعد</p>
+        </div>
+    </div>
+</section>

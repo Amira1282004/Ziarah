@@ -1,0 +1,245 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - زيارة</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="~/assets/logo.png">
+    <link rel="stylesheet" href="~/css/General/header.css" />
+    <link rel="stylesheet" href="~/css/General/footer.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    @RenderSection("Styles", required: false)
+</head>
+
+<body>
+@{
+    var layoutModel = ViewData["LayoutModel"] as Ziarah.Areas.Patient.Models.PatientHomeViewModel;
+
+    var headerFullName    = layoutModel?.FullName    ?? User.Identity?.Name ?? "المستخدم";
+    var headerPhoto       = layoutModel?.PhotoUrl;
+    var headerHasInsurance = layoutModel?.HasInsurance ?? false;
+    var headerNotifs      = layoutModel?.Notifications ?? new List<Ziarah.Areas.Patient.Models.NotificationItem>();
+    var headerUnread      = layoutModel?.UnreadCount   ?? 0;
+
+    string TimeAgo(DateTime dt)
+    {
+        var diff = DateTime.UtcNow - dt.ToUniversalTime();
+        if (diff.TotalMinutes < 1)   return "الآن";
+        if (diff.TotalMinutes < 60)  return $"منذ {(int)diff.TotalMinutes} دقيقة";
+        if (diff.TotalHours   < 24)  return $"منذ {(int)diff.TotalHours} ساعة";
+        if (diff.TotalDays    < 7)   return $"منذ {(int)diff.TotalDays} أيام";
+        return dt.ToString("dd MMM yyyy");
+    }
+
+    // Type: 1=confirmed, 2=cancelled, 3=completed, 0=pending
+    string NotifIconClass(int type) => type switch
+    {
+        1 => "confirmed",
+        2 => "cancelled",
+        3 => "completed",
+        _ => "pending"
+    };
+
+    string NotifIcon(int type) => type switch
+    {
+        1 => "fa-circle-check",
+        2 => "fa-circle-xmark",
+        3 => "fa-star",
+        _ => "fa-clock"
+    };
+}
+
+<header class="header">
+    <div class="middle-header">
+        <div class="logo">
+            <a asp-area="Patient" asp-controller="Home" asp-action="Home">
+                <img src="~/assets/logo.png" alt="شعار زيارة">
+            </a>
+        </div>
+        <div class="search">
+            <input type="text" placeholder="ابحث عن طبيب أو خدمة..." id="searchInput" autocomplete="off">
+            <div class="search-results-dropdown" id="searchDropdown">
+                <div class="search-results-header">
+                    <span><strong id="resultsCount"></strong>&nbsp;لـ "<span id="searchQuery"></span>"</span>
+                    <button class="search-close-btn" onclick="closeSearchDropdown()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="search-loading" id="searchLoading">
+                    <div class="search-spinner"></div><p>جاري البحث...</p>
+                </div>
+                <div class="search-empty" id="searchEmpty">
+                    <i class="fa-solid fa-magnifying-glass"></i><p>لا توجد نتائج مطابقة</p>
+                </div>
+                <div class="search-results-list" id="searchResultsList"></div>
+            </div>
+        </div>
+        <div class="theme-toggle" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></div>
+        <div class="lang">
+            <i class="fa-solid fa-earth-americas"></i>
+            <select onchange="changeLang(this.value)">
+                <option value="ar">العربية</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+
+        <nav class="nav">
+            <div class="lang-theme">
+                <div class="nav-theme" onclick="toggleTheme()">
+                    <i class="fa-solid fa-moon" id="navThemeIcon"></i><span>تغيير الوضع</span>
+                </div>
+                <div class="nav-lang">
+                    <i class="fa-solid fa-earth-americas"></i>
+                    <select onchange="changeLang(this.value)">
+                        <option value="ar">العربية</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </div>
+
+            <a asp-area="Patient" asp-controller="Home" asp-action="Home" class="nav-active">الرئيسية</a>
+
+            <div class="list-services">
+                <a asp-area="Patient" asp-controller="RequestVisit" asp-action="RequestVisit">
+                    الخدمات <i class="fa-solid fa-angle-down"></i>
+                </a>
+                <ul class="items-services">
+                    <li>طلب طبيب</li>
+                    <li>طلب تمريض</li>
+                    <li>أخذ عينة</li>
+                    <li>علاج طبيعي</li>
+                </ul>
+            </div>
+
+            <a asp-area="Patient" asp-controller="RequestVisit" asp-action="RequestVisit">طلب زيارة منزلية</a>
+
+            @* ── لينك التأمين — يظهر فقط لمن لديه تأمين ── *@
+            @if (headerHasInsurance)
+            {
+                <a asp-area="Patient" asp-controller="Insurance" asp-action="Insurance">
+                    تأمين اعضاء هيئة التدريس
+                </a>
+            }
+
+            <a asp-area="Patient" asp-controller="MedicalTips" asp-action="MedicalTips">نصائح طبية</a>
+            <a asp-area="Patient" asp-controller="About" asp-action="About">من نحن</a>
+            <a asp-area="Patient" asp-controller="Contact" asp-action="Contact">تواصل معنا</a>
+        </nav>
+
+        <div class="buttons">
+
+            @* ── قائمة الإشعارات ── *@
+            <div class="notif-menu" id="notifMenu">
+                <button class="notif-btn" onclick="toggleNotifMenu()" aria-label="الإشعارات">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="notif-badge @(headerUnread == 0 ? "hidden" : "")"
+                          id="notifBadge">@headerUnread</span>
+                </button>
+
+                <div class="notif-dropdown" id="notifDropdown">
+                    <div class="notif-dropdown-header">
+                        <span>الإشعارات</span>
+                        <button class="notif-mark-all" onclick="markAllRead()">
+                            تحديد الكل كمقروء
+                        </button>
+                    </div>
+
+                    <div class="notif-list" id="notifList">
+                        @if (headerNotifs.Any())
+                        {
+                            foreach (var notif in headerNotifs)
+                            {
+                                <div class="notif-item @(!notif.IsRead ? "unread" : "")"
+                                     data-notif-id="@notif.Id"
+                                     onclick="markRead(this)">
+                                    <div class="notif-icon @NotifIconClass(notif.Type)">
+                                        <i class="fa-solid @NotifIcon(notif.Type)"></i>
+                                    </div>
+                                    <div class="notif-body">
+                                        <div class="notif-title">@notif.Title</div>
+                                        <div class="notif-desc">@notif.Message</div>
+                                        <div class="notif-time">@TimeAgo(notif.CreatedOn)</div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="notif-empty">
+                                <i class="fa-regular fa-bell-slash"></i>
+                                <p>لا توجد إشعارات</p>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="notif-dropdown-footer">
+                        <a href="#" onclick="showVisitHistory(); closeNotifMenu();">
+                            عرض سجل الزيارات
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @* ── قائمة المستخدم ── *@
+            <div class="user-menu">
+                <div class="user-avatar" onclick="toggleUserMenu()">
+                    @if (!string.IsNullOrWhiteSpace(headerPhoto))
+                    {
+                        <img src="@headerPhoto" alt="@headerFullName">
+                    }
+                    else
+                    {
+                        <div class="user-avatar-fallback">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                    }
+                    <span id="userName">@headerFullName</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+
+                <div class="user-dropdown" id="userDropdown">
+                    <a asp-area="Patient" asp-controller="Profile" asp-action="Profile">
+                        <i class="fa-solid fa-user-pen"></i> الملف الشخصي
+                    </a>
+                    <a href="#" onclick="showVisitHistory(); toggleUserMenu();">
+                        <i class="fa-solid fa-clock-rotate-left"></i> سجل الزيارات
+                    </a>
+                    <div class="user-dropdown-divider"></div>
+                    <form asp-area="Identity" asp-controller="Login" asp-action="Logout" method="post"
+                          style="margin:0;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="logout-link">
+                            <i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<main role="main">
+    @RenderBody()
+</main>
+
+<footer>
+    <div class="footer-small">
+        <div class="footer-logo">
+            <img src="~/assets/logo.png" alt="شعار منصة زيارة">
+        </div>
+        <p>حقوق النشر والطبع محفوظه زيارة | &copy; 2026</p>
+    </div>
+</footer>
+
+<script src="~/js/General/header.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

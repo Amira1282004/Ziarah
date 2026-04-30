@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - زيارة</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="~/assets/logo.png">
+
+    <link rel="stylesheet" href="~/css/General/header.css" />
+    <link rel="stylesheet" href="~/css/General/footer.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    @RenderSection("Styles", required: false)
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="middle-header">
+
+            <div class="logo">
+                <a href="#"><img src="assets/logo.png" alt="شعار زيارة"></a>
+            </div>
+
+            <div class="group-btns">
+
+                <div class="notif-wrapper" id="notifWrapper">
+                    <div class="notifications" onclick="toggleNotif()">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notif-badge" id="notifBadge">3</span>
+                    </div>
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <span>الإشعارات</span>
+                            <button class="notif-mark-all" onclick="markAllRead()">تحديد الكل كمقروء</button>
+                        </div>
+                        <div class="notif-list" id="notifList"></div>
+                        <div class="notif-footer">
+                            <a href="#" onclick="showSection('history'); closeNotif();">عرض سجل الزيارات</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fa-solid fa-moon"></i>
+                </div>
+
+                <div class="lang">
+                    <i class="fa-solid fa-earth-americas"></i>
+                    <select onchange="">
+                        <option value="ar">العربية</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="nav-bar">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <nav class="nav">
+                <div class="nav-notifications" onclick="toggleNotif()">
+                    <i class="fa-solid fa-bell"></i>
+                    <span>الاشعارات</span>
+                </div>
+                <div class="lang-theme">
+                    <div class="nav-theme" onclick="toggleTheme()">
+                        <i class="fa-solid fa-moon" id="navThemeIcon"></i>
+                        <span>تغيير الوضع</span>
+                    </div>
+
+                    <div class="nav-lang">
+                        <i class="fa-solid fa-earth-americas"></i>
+                        <select onchange="changeLang(this.value)">
+                            <option value="ar">العربية</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
+
+            </nav>
+        </div>
+
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer>
+        <div class="footer-small">
+            <div class="footer-logo">
+                <img src="~/assets/logo.png" alt="شعار منصة زيارة">
+            </div>
+            <p> حقوق النشر والطبع محفوظه زيارة | &copy;  2026</p>
+        </div>
+    </footer>
+
+    <script src="~/js/General/header.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html> 

@@ -45,7 +45,11 @@ public partial class User
 
     public string? Gender { get; set; }
 
-    public string? ImageUrl { get; set; }
+    public string? Photo { get; set; }
+
+    public string NationalIdFrontImage { get; set; } = null!;
+
+    public string NationalIdBackImage { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
 
@@ -63,11 +67,7 @@ public partial class User
 
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 
-    public virtual ICollection<Clinic> Clinics { get; set; } = new List<Clinic>();
-
     public virtual ICollection<Department1> Department1s { get; set; } = new List<Department1>();
-
-    public virtual ICollection<DoctorClinic> DoctorClinics { get; set; } = new List<DoctorClinic>();
 
     public virtual ICollection<Doctor> DoctorCreatedByNavigations { get; set; } = new List<Doctor>();
 

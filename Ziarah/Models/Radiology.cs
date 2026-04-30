@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Ziarah.Models;
@@ -12,6 +12,8 @@ public partial class Radiology
     public string Phone { get; set; } = null!;
 
     public string Location { get; set; } = null!;
+
+    public string? ImageUrl { get; set; }
 
     public string? Types { get; set; }
 

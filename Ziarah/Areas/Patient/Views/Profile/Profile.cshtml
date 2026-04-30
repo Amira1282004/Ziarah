@@ -1,0 +1,281 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "الصفحة الشخصية";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Patient/profile.css" />
+}
+@section Scripts {
+    <script src="~/js/Patient/profile.js"></script>
+}
+
+<section class="profile-hero">
+    <div class="welcome-bg-circles">
+        <span></span><span></span><span></span>
+    </div>
+    <div class="profile-hero-inner">
+        <div class="profile-avatar-wrap">
+            <div class="profile-avatar-ring">
+                <img src="assets/image/be7d92ded7de75fe6dc9fd4406e789ac22393930.png" id="heroAvatar"
+                     onerror="this.style.display='none'; document.getElementById('avatarFallback').style.display='flex'" alt="">
+                <div class="avatar-fallback-big" id="avatarFallback">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+            <label class="avatar-edit-btn" for="avatarInput" title="تغيير الصورة">
+                <i class="fa-solid fa-camera"></i>
+            </label>
+            <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="previewAvatar(this)">
+        </div>
+        <div class="profile-btns">
+            <div class="profile-hero-info">
+            <p class="profile-hello">الملف الشخصي</p>
+            <h1 id="heroName">محمد أحمد</h1>
+            <div class="profile-hero-meta">
+                <span><i class="fa-solid fa-phone"></i> <span id="heroPhone">01012345678</span></span>
+                <span><i class="fa-solid fa-envelope"></i> <span id="heroEmail">user@gmail.com</span></span>
+                <span><i class="fa-solid fa-shield-halved"></i> <span id="heroInsStatus">لا يوجد تأمين</span></span>
+            </div>
+        </div>
+        </div>
+
+    </div>
+</section>
+
+<main class="profile-main">
+
+    <aside class="profile-sidebar">
+        <nav class="profile-tabs">
+            <button class="profile-tab active" data-tab="personal" onclick="switchTab('personal', this)">
+                <span>المعلومات الشخصية</span>
+            </button>
+            <button class="profile-tab" data-tab="security" onclick="switchTab('security', this)">
+                <span>الأمان وكلمة المرور</span>
+            </button>
+            <button class="profile-tab" data-tab="insurance" onclick="switchTab('insurance', this)">
+                <span>التأمين الطبي</span>
+            </button>
+            <button class="profile-tab" data-tab="documents" onclick="switchTab('documents', this)">
+                <span>المستندات</span>
+            </button>
+        </nav>
+    </aside>
+
+    <div class="profile-content">
+
+        <section class="profile-panel active" id="tab-personal">
+            <div class="section-header">
+                <div>
+                    <h2>المعلومات الشخصية</h2>
+                </div>
+            </div>
+
+            <form class="profile-form" id="personalForm" onsubmit="savePersonal(event)">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label> الاسم الأول</label>
+                        <input type="text" id="firstName" name="firstName" value="محمد" required>
+                    </div>
+                    <div class="input-group">
+                        <label> الاسم الأخير</label>
+                        <input type="text" id="lastName" name="lastName" value="أحمد" required>
+                    </div>
+                    <div class="input-group">
+                        <label> رقم الهاتف</label>
+                        <input type="tel" id="phone" name="phone" value="01012345678" placeholder="01xxxxxxxxx" required>
+                    </div>
+                    <div class="input-group">
+                        <label> البريد الإلكتروني</label>
+                        <input type="email" id="email" name="email" value="user@gmail.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label> تاريخ الميلاد</label>
+                        <input type="date" id="birthdate" name="birthdate">
+                    </div>
+                    <div class="input-group">
+                        <label> الجنس</label>
+                        <div class="custom-select-wrapper">
+                            <select id="gender" name="gender" class="custom-select">
+                                <option value="">اختر</option>
+                                <option value="male" selected>ذكر</option>
+                                <option value="female">أنثى</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group full-width">
+                        <label> العنوان</label>
+                        <input type="text" id="address" name="address" placeholder="المنطقة، الشارع، رقم المبنى...">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">
+                        حفظ التغييرات
+                    </button>
+                    <button type="reset" class="cancel-btn">إلغاء</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="profile-panel" id="tab-security">
+            <div class="section-header">
+                <div>
+                    <h2>الأمان وكلمة المرور</h2>
+                </div>
+            </div>
+
+            <form class="profile-form" id="securityForm" onsubmit="savePassword(event)">
+                <div class="form-grid">
+                    <div class="input-group full-width">
+                        <label> كلمة المرور الحالية</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="currentPass" placeholder="أدخل كلمة المرور الحالية">
+                            <i class="fa-solid fa-eye toggle-password" onclick="togglePass('currentPass', this)"></i>
+                        </div>
+                    </div>
+                    <div class="input-group full-width">
+                        <label> كلمة المرور الجديدة</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="newPass" placeholder="8 أحرف على الأقل">
+                            <i class="fa-solid fa-eye toggle-password" onclick="togglePass('newPass', this)"></i>
+                        </div>
+                        <div class="password-strength" id="strengthBar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <p class="strength-label" id="strengthLabel"></p>
+                    </div>
+                    <div class="input-group full-width">
+                        <label> تأكيد كلمة المرور</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="confirmPass" placeholder="أعد كتابة كلمة المرور الجديدة">
+                            <i class="fa-solid fa-eye toggle-password" onclick="togglePass('confirmPass', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="pass-rules">
+                    <p class="pass-rules-title">يجب أن تحتوي كلمة المرور على:</p>
+                    <ul>
+                        <li id="rule-len"><i class="fa-solid fa-circle-xmark"></i> 8 أحرف على الأقل</li>
+                        <li id="rule-upper"><i class="fa-solid fa-circle-xmark"></i> حرف كبير (A-Z)</li>
+                        <li id="rule-lower"><i class="fa-solid fa-circle-xmark"></i> حرف صغير (a-z)</li>
+                        <li id="rule-num"><i class="fa-solid fa-circle-xmark"></i> رقم (0-9)</li>
+                        <li id="rule-special"><i class="fa-solid fa-circle-xmark"></i> رمز خاص</li>
+                    </ul>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">
+                         تحديث كلمة المرور
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="profile-panel" id="tab-insurance">
+            <div class="section-header">
+                <div>
+                    <h2>التأمين الطبي</h2>
+                </div>
+            </div>
+
+            <div class="ins-status-card" id="insStatusCard">
+                <div class="ins-status-icon has-ins"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="ins-status-text">
+                    <h3 id="insStatusTitle">التأمين مسجل</h3>
+                </div>
+                <div class="ins-status-img">
+                    <img src="assets/image/كارنيه الـتأمين.jpg" alt="كارنيه التأمين">
+                </div> 
+            </div>
+
+
+        </section>
+
+        <section class="profile-panel" id="tab-documents">
+            <div class="section-header">
+                <div><h2>المستندات</h2></div>
+            </div>
+
+            <div class="docs-grid">
+                <div class="doc-card">
+                    <div class="doc-icon-wrap"><i class="fa-solid fa-id-card"></i></div>
+                    <div class="doc-info">
+                        <h4>بطاقة الرقم القومي</h4>
+                        <p class="doc-status uploaded" id="docNationalId">
+                            <i class="fa-solid fa-circle-check"></i> تم الرفع (وجه + ظهر)
+                        </p>
+                    </div>
+                    <div class="doc-actions">
+                        <button class="doc-btn view" title="عرض" onclick="viewNationalId()">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <label class="doc-btn edit" title="تحديث (وجه + ظهر)" for="newIdFiles">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                        </label>
+                        <input type="file" id="newIdFiles" accept="image/*" multiple style="display:none;">
+                    </div>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-icon-wrap ins-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="doc-info">
+                        <h4>كارنيه التأمين</h4>
+                        <p class="doc-status uploaded" id="docInsuranceCard">
+                            <i class="fa-solid fa-circle-check"></i> تم الرفع
+                        </p>
+                    </div>
+                    <div class="doc-actions">
+                        <button class="doc-btn view" title="عرض" onclick="viewInsuranceCard()">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <label class="doc-btn edit" title="تحديث" for="newInsFile">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                        </label>
+                        <input type="file" id="newInsFile" accept="image/*" style="display:none;">
+                    </div>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-icon-wrap med-icon"><i class="fa-solid fa-file-medical"></i></div>
+                    <div class="doc-info">
+                        <h4>التقارير الطبية</h4>
+                        <p class="doc-status missing" id="docMedicalReports">
+                            <i class="fa-solid fa-circle-xmark"></i> لم يرفع بعد
+                        </p>
+                    </div>
+                    <div class="doc-actions">
+                        <button class="doc-btn view" id="medViewBtn" title="عرض الملفات"
+                                onclick="viewMedicalReports()" style="display:none;">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <label class="doc-btn upload" title="رفع ملفات" for="newMedFiles">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </label>
+                        <input type="file" id="newMedFiles" multiple
+                               accept="image/*,application/pdf,.doc,.docx"
+                               style="display:none;">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="doc-modal-overlay" id="docModalOverlay" onclick="closeDocModal(event)">
+            <div class="doc-modal" id="docModal">
+                <div class="doc-modal-header">
+                    <span id="docModalTitle">عرض المستند</span>
+                    <button class="doc-modal-close" onclick="closeDocModal()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="doc-modal-body" id="docModalBody">
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="toast" id="toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toastMsg">تم الحفظ بنجاح</span>
+</div>

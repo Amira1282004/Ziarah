@@ -20,15 +20,11 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Appointment> Appointments { get; set; }
 
-    public virtual DbSet<Clinic> Clinics { get; set; }
-
     public virtual DbSet<Department> Departments { get; set; }
 
     public virtual DbSet<Department1> Departments1 { get; set; }
 
     public virtual DbSet<Doctor> Doctors { get; set; }
-
-    public virtual DbSet<DoctorClinic> DoctorClinics { get; set; }
 
     public virtual DbSet<HomeCareService> HomeCareServices { get; set; }
 
@@ -106,29 +102,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasConstraintName("FK_Appointments_CreatedBy");
         });
 
-        modelBuilder.Entity<Clinic>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Clinics__3214EC075555E5BA");
-
-            entity.ToTable("Clinics", "Ziarah_schema");
-
-            entity.Property(e => e.Address).HasMaxLength(500);
-            entity.Property(e => e.Building).HasMaxLength(100);
-            entity.Property(e => e.City).HasMaxLength(100);
-            entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.LastModifiedBy).HasMaxLength(450);
-            entity.Property(e => e.Latitude).HasColumnType("decimal(10, 7)");
-            entity.Property(e => e.Longitude).HasColumnType("decimal(10, 7)");
-            entity.Property(e => e.Name).HasMaxLength(200);
-            entity.Property(e => e.Phone).HasMaxLength(50);
-            entity.Property(e => e.Street).HasMaxLength(200);
-
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Clinics)
-                .HasForeignKey(d => d.CreatedBy)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Clinics_CreatedBy");
-        });
-
         modelBuilder.Entity<Department1>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Departme__3214EC079C0F2581");
@@ -159,6 +132,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.ConsultationPrice).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.LastModifiedBy).HasMaxLength(450);
+            entity.Property(e => e.ProfessionalLicenseImage).HasMaxLength(500);
             entity.Property(e => e.Rating).HasColumnType("decimal(3, 2)");
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DoctorCreatedByNavigations)
@@ -177,33 +151,23 @@ public partial class ApplicationDbContext : DbContext
                 .HasConstraintName("FK_Doctors_Users");
         });
 
-        modelBuilder.Entity<DoctorClinic>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__DoctorCl__3214EC07053C2733");
-
-            entity.ToTable("DoctorClinics", "Ziarah_schema");
-
-            entity.HasIndex(e => new { e.DoctorId, e.ClinicId }, "UQ_DoctorClinics_DoctorClinic").IsUnique();
-
-            entity.Property(e => e.ConsultationPrice).HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.LastModifiedBy).HasMaxLength(450);
-
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DoctorClinics)
-                .HasForeignKey(d => d.CreatedBy)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_DoctorClinics_CreatedBy");
-        });
-
         modelBuilder.Entity<HomeCareService>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__HomeCare__3214EC07E52FA273");
 
             entity.ToTable("HomeCareServices", "Ziarah_schema");
 
+            entity.Property(e => e.AdditionalNotes).HasMaxLength(4000);
             entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.LastModifiedBy).HasMaxLength(450);
+            entity.Property(e => e.MedicalCondition).HasMaxLength(2000);
+            entity.Property(e => e.NationalIdBackImage).HasMaxLength(500);
+            entity.Property(e => e.NationalIdFrontImage).HasMaxLength(500);
+            entity.Property(e => e.ProviderType).HasMaxLength(20);
             entity.Property(e => e.RequestDate).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.RequesterEmail).HasMaxLength(256);
+            entity.Property(e => e.RequesterFullName).HasMaxLength(200);
+            entity.Property(e => e.RequesterPhone).HasMaxLength(50);
             entity.Property(e => e.ServiceLocation).HasMaxLength(500);
             entity.Property(e => e.Status).HasDefaultValue(1);
 
@@ -222,6 +186,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.HospitalName).HasMaxLength(200);
             entity.Property(e => e.Hotline).HasMaxLength(50);
+            entity.Property(e => e.ImageUrl).HasMaxLength(500);
             entity.Property(e => e.LastModifiedBy).HasMaxLength(450);
             entity.Property(e => e.Location).HasMaxLength(500);
 
@@ -260,6 +225,7 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("Lab", "Ziarah_schema");
 
             entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.ImageUrl).HasMaxLength(500);
             entity.Property(e => e.LabName).HasMaxLength(200);
             entity.Property(e => e.LastModifiedBy).HasMaxLength(450);
             entity.Property(e => e.Location).HasMaxLength(500);
@@ -303,10 +269,8 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("Nurses", "Ziarah_schema");
 
             entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.FirstName).HasMaxLength(100);
             entity.Property(e => e.LastModifiedBy).HasMaxLength(450);
-            entity.Property(e => e.LastName).HasMaxLength(100);
-            entity.Property(e => e.Photo).HasMaxLength(500);
+            entity.Property(e => e.ProfessionalLicenseImage).HasMaxLength(500);
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.NurseCreatedByNavigations)
                 .HasForeignKey(d => d.CreatedBy)
@@ -315,6 +279,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.NurseUsers)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Nurses_User");
         });
 
@@ -327,6 +292,8 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.BloodType).HasMaxLength(10);
             entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Height).HasColumnType("decimal(5, 2)");
+            entity.Property(e => e.HasInsurance).HasDefaultValue(false);
+            entity.Property(e => e.InsuranceImage).HasMaxLength(500);
             entity.Property(e => e.LastModifiedBy).HasMaxLength(450);
             entity.Property(e => e.Weight).HasColumnType("decimal(5, 2)");
 
@@ -373,6 +340,7 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("Pharmacy", "Ziarah_schema");
 
             entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.ImageUrl).HasMaxLength(500);
             entity.Property(e => e.LastModifiedBy).HasMaxLength(450);
             entity.Property(e => e.Location).HasMaxLength(500);
             entity.Property(e => e.PharmacyName).HasMaxLength(200);
@@ -395,6 +363,7 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("Radiology", "Ziarah_schema");
 
             entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.ImageUrl).HasMaxLength(500);
             entity.Property(e => e.LastModifiedBy).HasMaxLength(450);
             entity.Property(e => e.Location).HasMaxLength(500);
             entity.Property(e => e.NameRadiology).HasMaxLength(200);
@@ -433,11 +402,9 @@ public partial class ApplicationDbContext : DbContext
 
             entity.ToTable("Schedules", "Ziarah_schema");
 
-            entity.HasIndex(e => e.ClinicId, "IX_Schedules_ClinicId");
-
             entity.HasIndex(e => e.DoctorId, "IX_Schedules_DoctorId");
 
-            entity.HasIndex(e => new { e.DoctorId, e.ClinicId, e.DayOfWeek }, "UQ_Schedules_DoctorClinicDay").IsUnique();
+            entity.HasIndex(e => new { e.DoctorId, e.DayOfWeek }, "UQ_Schedules_DoctorDay").IsUnique();
 
             entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.IsActive).HasDefaultValue(true);
@@ -491,9 +458,11 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(201)
                 .HasComputedColumnSql("(([FirstName]+N' ')+[LastName])", true);
             entity.Property(e => e.Gender).HasMaxLength(10);
-            entity.Property(e => e.ImageUrl).HasMaxLength(500);
+            entity.Property(e => e.Photo).HasMaxLength(500);
             entity.Property(e => e.LastName).HasMaxLength(100);
             entity.Property(e => e.LockoutEnabled).HasDefaultValue(true);
+            entity.Property(e => e.NationalIdBackImage).HasMaxLength(500);
+            entity.Property(e => e.NationalIdFrontImage).HasMaxLength(500);
             entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.PhoneNumber).HasMaxLength(50);

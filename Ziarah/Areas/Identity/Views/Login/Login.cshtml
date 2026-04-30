@@ -1,0 +1,106 @@
+﻿@{
+    ViewData["Title"] = "تسجيل الدخول";
+    var modelErrors = ViewData.ModelState.Values
+        .SelectMany(v => v.Errors)
+        .Select(e => e.ErrorMessage)
+        .Where(m => !string.IsNullOrWhiteSpace(m))
+        .ToList();
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Auth/login.css" />
+}
+@section Scripts {
+    <script src="~/js/Auth/login.js"></script>
+}
+
+<div id="errorPopupOverlay" class="popup-overlay @(modelErrors.Any() ? "active" : "")">
+    <div class="popup-card popup-error">
+        <div class="popup-icon-ring">
+            <i class="fa-solid fa-circle-xmark"></i>
+        </div>
+        <h3 class="popup-title">تعذّر تسجيل الدخول</h3>
+        <ul class="popup-error-list">
+            @foreach (var err in modelErrors)
+            {
+                <li><i class="fa-solid fa-circle-dot"></i> @err</li>
+            }
+        </ul>
+        <button class="popup-close-btn" onclick="closeErrorPopup()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+
+@if (TempData["LoginMessage"] is string loginMsg)
+{
+    <div id="successBanner" class="success-banner">
+        <i class="fa-solid fa-circle-check"></i> @loginMsg
+    </div>
+}
+
+<div class="login-box">
+    <div class="wolcome-login">
+        <h2 class="form-title">مرحبًا بعودتك</h2>
+        <p class="form-subtitle">سجّل الدخول للوصول إلى حسابك وطلب الخدمات الطبية بسهولة وأمان.</p>
+    </div>
+
+    <form id="loginForm"
+          asp-area="Identity"
+          asp-controller="Login"
+          asp-action="Login"
+          method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="input-group">
+            <label for="loginEmail">البريد الإلكتروني</label>
+            <input type="email" id="loginEmail" name="email"
+                   placeholder="info@gmail.com" required maxlength="256" />
+        </div>
+
+        <div class="input-group password-group">
+            <label for="loginPassword">كلمة المرور</label>
+            <div class="password-wrapper">
+                <input type="password" id="loginPassword" name="password"
+                       placeholder="كلمة المرور" required />
+                <i class="fa-solid fa-eye toggle-password" id="toggleLoginPassword"></i>
+            </div>
+        </div>
+
+        <div class="remember-forgot">
+            <label class="remember-label">
+                <input type="checkbox" name="rememberMe" id="rememberMe" value="true" />
+                <span class="remember-checkmark"></span>
+                تذكّرني
+            </label>
+            <div class="forgot-link">
+                <a asp-area="Identity" asp-controller="Login" asp-action="ForgotPassword">
+                    نسيت كلمة المرور؟
+                </a>
+            </div>
+        </div>
+
+        <div class="btns-form">
+            <button type="submit" class="submit-btn">تسجيل الدخول</button>
+            <button type="button" class="google-btn">
+                اكمل باستخدام <i class="fa-brands fa-google"></i>
+            </button>
+        </div>
+
+        <div class="login-link">
+            <a asp-area="Identity" asp-controller="Register" asp-action="Register">
+                ليس لديك حساب؟ أنشئ حساب الآن
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function closeErrorPopup() {
+        document.getElementById('errorPopupOverlay').classList.remove('active');
+    }
+    document.getElementById('errorPopupOverlay')?.addEventListener('click', function (e) {
+        if (e.target === this) closeErrorPopup();
+    });
+    const banner = document.getElementById('successBanner');
+    if (banner) setTimeout(() => banner.classList.add('hide'), 4000);
+</script>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Ziarah.Models;
@@ -10,8 +10,6 @@ public partial class Appointment
     public int PatientId { get; set; }
 
     public int DoctorId { get; set; }
-
-    public int ClinicId { get; set; }
 
     public DateOnly AppointmentDate { get; set; }
 

@@ -13,6 +13,8 @@ public partial class Lab
 
     public string Location { get; set; } = null!;
 
+    public string? ImageUrl { get; set; }
+
     public bool TakingHomeSample { get; set; }
 
     public int? InsuranceId { get; set; }

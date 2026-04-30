@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Ziarah.Models;
@@ -8,8 +8,6 @@ public partial class Schedule
     public int Id { get; set; }
 
     public int DoctorId { get; set; }
-
-    public int ClinicId { get; set; }
 
     public int DayOfWeek { get; set; }
 
